@@ -1,0 +1,139 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+  namespace: logging
+  labels:
+    k8s-app: fluentd
+data:
+  fluent.conf: |
+
+    <source>
+      @type forward
+      @id from_forward_input
+      bind 0.0.0.0
+      port 24224
+      @label @ES
+    </source>
+
+    <label @ES>
+      <match kube.var.log.containers.fluent**>
+        @type null
+      </match>
+
+      <filter kube.var.log.containers.apache**>
+         @type parser
+         format apache2
+         key_name log
+         reserve_data true
+         suppress_parse_error_log true
+      </filter>
+
+      # <match kube.var.log.containers.apache**>
+      #  @type stdout
+      # </match>
+
+      <match **>
+        @type aws-elasticsearch-service
+        type_name access_log
+        logstash_format true
+        include_tag_key true
+        tag_key @log_name
+
+        <buffer tag>
+          @type memory
+          flush_thread_count 2
+        </buffer>
+
+        <endpoint>
+          url "#{ENV['AWS_ES_URL']}"
+          region "#{ENV['AWS_ES_REGION']}"
+        </endpoint>
+      </match>
+    </label>
+    <label @ERROR>
+      <match **>
+        @type stdout
+      </match>
+    </label>
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fluentd
+  labels:
+    app: fluentd
+  namespace: logging
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fluentd
+  template:
+    metadata:
+      labels:
+        app: fluentd
+      annotations:
+        fluentbit.io/exclude: "true"
+    spec:
+      terminationGracePeriodSeconds: 30
+      # Because the image's entrypoint requires to write on /fluentd/etc but we mount configmap there which is read-only,
+      # this initContainers workaround or other is needed.
+      # See https://github.com/fluent/fluentd-kubernetes-daemonset/issues/90
+      initContainers:
+      - name: copy-fluentd-config
+        image: busybox
+        command: ['sh', '-c', 'cp /config-volume/..data/* /fluentd/etc']
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config-volume
+        - name: fluentdconf
+          mountPath: /fluentd/etc
+      containers:
+      - name: fluentd
+        image: carmenpuccio/fluentd-aws-elasticsearch-service:latest
+        env:
+        - name: AWS_ES_URL
+          value: "https://your-elasticsearch-https-endpoint.us-east-1.es.amazonaws.com"
+        - name: AWS_ES_REGION
+          value: "us-east-1"
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config-volume
+        - name: fluentdconf
+          mountPath: /fluentd/etc
+      volumes:
+      - name: config-volume
+        configMap:
+          name: fluentd-config
+      - name: fluentdconf
+        emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluentd
+  labels: 
+    app: fluentd
+  namespace: logging
+spec:
+  selector:
+    app: fluentd
+  ports:
+    - protocol: TCP
+      port: 24224
+      targetPort: 24224
+
+
+
+
+
