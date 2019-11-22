@@ -4,7 +4,7 @@ In this example, we deploy Fluent Bit as a DaemonSet to tail /var/log/containers
 
 #### Prerequisites
 
-* An [Amazon Elasticsearch](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html) domain with Public access configured with [Amazon Cognito Authentication for Kibana](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-cognito-auth) and the appropriate [Access Policy](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-access-policies).
+* An [Amazon Elasticsearch](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html) domain configured with [Amazon Cognito Authentication for Kibana](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-cognito-auth) and the appropriate [Access Policy](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-access-policies).
 
 #### Instructions
 
@@ -26,7 +26,7 @@ kubectl apply -f fluent-bit/
 ```
 kubectl apply -f sample-apps/nginx-fluentbit.yaml
 ```
-2. There is a file called [apache-fluentd.yaml](sample-apps/apache-fluentd.yaml) which simply creates a an Apache deployment and a service. The [fluentd.yaml](fluentd/fluentd.yaml) showcases how to specify a parser by specifying `<filter kube.var.log.containers.apache**>` in the ConfigMap.
+2. There is a file called [apache-fluentd.yaml](sample-apps/apache-fluentd.yaml) which simply creates an Apache deployment and a service. The [fluentd.yaml](fluentd/fluentd.yaml) showcases how to specify a parser by specifying `<filter kube.var.log.containers.apache**>` in the ConfigMap.
 ```
 kubectl apply -f sample-apps/apache-fluentd.yaml
 ```
