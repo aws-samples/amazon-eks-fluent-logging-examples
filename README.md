@@ -1,11 +1,14 @@
-## My Project
+## Amazon EKS Fluent Logging Examples
 
-TODO: Fill this README out!
+Sample logging architectures for Fluent Bit and FluentD on Amazon EKS
 
-Be sure to:
+### Contributing
 
-* Change the title in this README
-* Edit your repository description on GitHub
+We want examples of as many use cases in this repository as possible! Submit a Pull Request if you would like to add something.
+
+### Examples
+
+* [Aggregator to Amazon Elasticsearch](examples/aggregator-to-amazon-elasticsearch/README.md)
 
 ## License
 
