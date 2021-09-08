@@ -1,14 +1,14 @@
-## Aggregator To Amazon Elasticsearch
+## Aggregator To Amazon OpenSearch Service
 
-In this example, we deploy Fluent Bit as a DaemonSet to tail /var/log/containers/*.log on an EKS cluster and forward to a FluentD aggregator running as a Service/Deployment which forwards to Amazon Elasticsearch.
+In this example, we deploy Fluent Bit as a DaemonSet to tail /var/log/containers/*.log on an EKS cluster and forward to a FluentD aggregator running as a Service/Deployment which forwards to Amazon OpenSearch Service.
 
 #### Prerequisites
 
-* An [Amazon Elasticsearch](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html) domain configured with [Amazon Cognito Authentication for Kibana](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-cognito-auth) and the appropriate [Access Policy](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-access-policies).
+* An [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html) domain configured with [Amazon Cognito Authentication for Kibana](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html#es-createdomain-configure-cognito-auth) and the appropriate [Access Policy](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-access-policies).
 
 #### Instructions
 
-* To get started, take a look at the [Dockerfile](Dockerfile) which builds a Docker Image with [fluent-plugin-aws-elasticsearch-service](https://github.com/atomita/fluent-plugin-aws-elasticsearch-service). You will need to build this image and push it to something like ECR or DockerHub.
+* To get started, take a look at the [Dockerfile](Dockerfile) which builds a Docker Image with [the fluentd plugin for Amazon OpenSearch Service](https://github.com/atomita/fluent-plugin-aws-elasticsearch-service). You will need to build this image and push it to something like ECR or DockerHub.
 * Create the Namespace
 ```
 kubectl apply -f logging-ns.yaml

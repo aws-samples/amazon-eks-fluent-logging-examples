@@ -8,7 +8,7 @@ We want examples of as many use cases in this repository as possible! Submit a P
 
 ### Examples
 
-* [Aggregator to Amazon Elasticsearch](examples/aggregator-to-amazon-elasticsearch/README.md)
+* [Aggregator to Amazon OpenSearch Service](examples/aggregator-to-amazon-opensearch/README.md)
 
 * [Fluent Bit and AWS App Mesh](examples/fluent-bit-appmesh/README.md)
 
