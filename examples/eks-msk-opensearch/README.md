@@ -1,8 +1,10 @@
 ## Multi-Tenant logging using Fluent-bit, EKS , Amazon MSK and  Amazon OpenSearch
 
-In this example,we will showcase how to use EKS's namespace as for tenant's isolation and forward logs AMazon Managed Service for Kafka to store and Finally to OpeneSearch. To achieve this, we will deploy Fluent Bit as a DaemonSet to tail /var/log/containers/*.log on the EKS cluster and use fluent-bit annotations to configure desired parser for services in each tenant's namespace.It will create one topic for each tenant in KAFKA and a MSK connector for OpenSearch to send these logs to OpenSearch such that each tenant will have one Index. In the end there is a link to OpenSearch multi-tenancy configuration using RBAC .
+In this example,we will showcase how to send your application logs from EKS's selective namespace(useful when you are using namesapce as tenant isolatio) and forward logs Amazon Managed Service for Kafka to store andto OpeneSearch for visualization. To achieve this, we will deploy Fluent Bit as a DaemonSet to tail /var/log/containers/*.log on the EKS cluster and use fluent-bit annotations to configure desired parser for pod's ina namespace enabled for logging via variable using terraform.This will create one topic for each namespace(enabled for logging) in Amazon MSK and then using MSK connector for OpenSearch we will send these logs to Opensearch such that each namespace(tenant) will have one Index.In the end there is a link to OpenSearch multi-tenancy configuration using RBAC from OpneSearch .
 
-Terraform code will help you to create an EKS cluster, MSK cluster, Kafka custom pluging ,Kafka Connector  and OpenSearch domain in one VPC.
+There is terraform code in terraform directory which you will use to create an EKS cluster, MSK cluster, Kafka custom plugin,MSK Connector for OpenSearch  and OpenSearch domain in one VPC.
+
+This solution can be enhanced to fan out logs from each namespace to multiple destination to duplicate or selectively send to other destination likes S3 etc. you can write customer kafka consumer for logs which might require further processing/filteration.
 
 #### Prerequisites
 
