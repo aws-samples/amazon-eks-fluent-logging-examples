@@ -12,7 +12,7 @@ We want examples of as many use cases in this repository as possible! Submit a P
 
 * [Fluent Bit and AWS App Mesh](examples/fluent-bit-appmesh/README.md)
 
-* [Multi tenant logging from EKS to Amazon OpenSearch using Amazon MSK](amazon-eks-fluent-logging-examples/tree/mainline/examples/eks-msk-opensearch)
+* [Multi tenant logging from EKS to Amazon OpenSearch using Amazon MSK](examples/eks-msk-opensearch)
 
 ## License
 
