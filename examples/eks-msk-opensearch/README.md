@@ -10,7 +10,7 @@ This solution can be enhanced to fan out logs from each namespace to multiple de
 #### Pre-requisites
 
 * . A S3 bucket for terraform backend
-* . An EC2 instance or Cloud9 instace with IAM permissions to create resources
+* . An EC2 instance or Cloud9 instace with IAM permissions to create resources(VPC/S3 bucket/EKS Cluster/MSK Brokers/OpenSearch Domain).A Administrator access IAM role is recommended.
 * . Install kubectl (https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/) and  kafka clients binaries to verify your KAFKA brokers (optional).
 
 #### Instructions
