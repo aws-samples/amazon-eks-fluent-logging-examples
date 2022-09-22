@@ -4,6 +4,7 @@ In this example,we will showcase how to send your application logs from EKS's se
 
 There is terraform code in terraform directory which you will use to create an EKS cluster, MSK cluster, Kafka custom plugin,MSK Connector for OpenSearch  and OpenSearch domain in one VPC.
 
+Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
 This solution can be enhanced to fan out logs from each namespace to multiple destination to duplicate or selectively send to other destination likes S3 etc. you can write customer kafka consumer for logs which might require further processing/filteration.
 
 #### Prerequisites
