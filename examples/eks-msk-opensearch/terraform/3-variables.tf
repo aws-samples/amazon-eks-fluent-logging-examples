@@ -21,11 +21,6 @@ variable "org" {
   default     = "example"
 }
 
-variable "zone_id" {
-  description = "Hosted zone id"
-  default     = "Z0161159M7P3PLASJN39"
-}
-
 variable "vpc_cidr" {
   description = "CIDR range for vpc"
   default     = "10.1.0.0/16"
