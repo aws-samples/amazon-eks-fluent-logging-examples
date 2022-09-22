@@ -7,19 +7,19 @@ There is terraform code in terraform directory which you will use to create an E
 Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
 This solution can be enhanced to fan out logs from each namespace to multiple destination to duplicate or selectively send to other destination likes S3 etc. you can write customer kafka consumer for logs which might require further processing/filteration.
 
-#### Prerequisites
+#### Pre-requisites
 
 * . A S3 bucket for terraform backend
-* . Access to call AWS API ( you can use AWS cloud9 IDE) or from your local machine after configuration credentials 
-* . A EC2 instance  which can access your KAFKA brokers and have kafka client binary downloaded.
+* . An EC2 instance or Cloud9 instace with IAM permissions to create resources
+* . Install kubectl (https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/) and  kafka clients binaries to verify your KAFKA brokers (optional).
 
 #### Instructions
 
 * To get started, edit 0-proivder.tf to update backend S3 bucket , region and key prefix.
 
-* Terraform will install fluent-bit in logging namespace and also create a example namespace.
+* Follow terraform instructions from section below ,terraform will create EKS cluster/MSK and OpenSearch compnonents and install fluent-bit in 'logging' namespace and also create a 'example' namespace.
 
-* Refer to 3-variables.tf to create/edit more namespaces and enable logging on them.
+* [Optional] Edit 3-variables.tf to create/edit more namespaces and enable logging on them.
 ```
 default = [
     {
