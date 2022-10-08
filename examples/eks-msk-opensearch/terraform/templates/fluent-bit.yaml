@@ -75,10 +75,7 @@ config:
         Match               application.*
         call                set_topic
         code                function set_topic(tag, timestamp, record) if record["kubernetes"]["namespace_name"] ~= nil then record["namespace"] = "logs_" .. record["kubernetes"]["namespace_name"] end return 2, timestamp, record end
-
-# We output the logs coming out of the Kubernetes Filter to KAFKA.
- 
- outputs: |
+  outputs: |
     [OUTPUT]
         Name                kafka
         Match               application.*
