@@ -55,6 +55,7 @@ default = [
 1. run 
 ```
 terraform init
+terraform apply
 
 ```
 
@@ -67,7 +68,7 @@ kubectl apply -f example-deployment.yaml
 kubectl get svc nginx-service-loadbalancer
 
 ```
-* Note down the name of LoadBalancer and copy it in your browser and hit few times to generate access logs.
+* Note down the name of LoadBalancer and copy it in your browser and hit it few times to generate access logs.
 
 3. Login to machine which has KAFKA client binary are installed and list KAFKA topics to verify logs_example and logs_logging topics are created and logs are sent to them.
  
