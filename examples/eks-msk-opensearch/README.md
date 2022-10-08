@@ -8,7 +8,11 @@ In this example, we will showcase how to send your application logs from EKS to 
 
 * Seperate KAFKA topics for each tenant to achieve tenant's log Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX per topic, hence giving tenant isolation at OpenSearch also.
 
-To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is one of the most popular opensource log collector/processor for kubernetes workloads which can send logs to  many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses OUTPUT plugins to forward logs to these destinations. In our example we will use 'KAFKA' OUTPUT plugin.
+To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is alightweight, and highly scalable logging and metrics processor and forwarder and can be used for kubernetes workloads which to send logs to   many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses following notions to process logs.
+
+* INPUT to define how to collect date/events.
+* FILTER to modify data to add/remove fields or enrich fields.
+* OUTPUT to configure plugins to forward logs to endpoints like S3,CloudWatch etc. In our example we will use 'KAFKA' OUTPUT plugin.
 
 Fluent Bit will run as a DaemonSet on your EKS cluster to tail /var/log/containers/*.log on the EKS cluster and use grep FILTER to process logs for configured namespaces.
 
