@@ -6,13 +6,17 @@ In this example, we will showcase how to send your application logs from EKS to 
 * you can use multilple KAFKA consumers or Connectors to send logs from your Podsto different destinations of your choice such as S3 or CloudWatch Logs .So Kafka can act as a Fan-Out source of your application logs.
 * Seperate KAFKA topics for each tenant will help you meet tenant's Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX  per topic, hence giving tenant isolation at OpenSearch also.
 
-To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is one of the most popular log collector/processor for kubernetes workloads which can send logs to  many supported destniations like CloudWatch Logs, S3, OpenSearch using OUTPUT plugins for each of these destinations.In our example we will use 'KAFKA' OUTPUT plugin
-Underthehood Fluent Bit will run as a DaemonSet on your EKS cluster to tail /var/log/containers/*.log on the EKS cluster and use fluent-bit annotations to configure desired parser for pod's ina namespace enabled for logging via variable using terraform.This will create one topic for each namespace(enabled for logging) in Amazon MSK and then using MSK connector for OpenSearch we will send these logs to Opensearch such that each namespace(tenant) will have one Index.In the end there is a link to OpenSearch multi-tenancy configuration using RBAC from OpneSearch .
+To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is one of the most popular opensource log collector/processor for kubernetes workloads which can send logs to  many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses OUTPUT plugins to forward logs these destinations. In our example we will use 'KAFKA' OUTPUT plugin.
 
-There is terraform code in terraform directory which you will use to create an EKS cluster, MSK cluster, Kafka custom plugin,MSK Connector for OpenSearch  and OpenSearch domain in one VPC.
+Fluent Bit will run as a DaemonSet on your EKS cluster to tail /var/log/containers/*.log on the EKS cluster and use grep FILTER to process logs for defined namespaces.
+We are using a Lua script filter in the configuration file which is used to set topic names for KAFKA topics such that each namespace will have a corresponding topic "logs_namespace" this gives our topics a unique name if KAFKA broker is being used/shared between more than many applications.
+
+In the end we are using Amazon MSK connector for OpenSearch we will send these logs to Opensearch such that each namespace(tenant) will have one Index.
+
+The terraform code in terraform directory which will create an EKS cluster, MSK cluster, Kafka custom plugin,MSK Connector for OpenSearch  and OpenSearch domain in VPC.
 
 Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
-This solution can be enhanced to fan out logs from each namespace to multiple destination to duplicate or selectively send to other destination likes S3 etc. you can write customer kafka consumer for logs which might require further processing/filteration.
+
 
 #### Pre-requisites
 
@@ -58,7 +62,7 @@ kubectl get svc nginx-service-loadbalancer
 ```
 * Note down the name of LoadBalancer and copy it in your browser and hit few times to generate access logs.
 
-3. Login to EC2 instance which have KAFKA client binary are installed and   list KAFKA topics to verify logs_example and logs_logging topics are created and logs are sent to them.
+3. Login to machine which has KAFKA client binary are installed and list KAFKA topics to verify logs_example and logs_logging topics are created and logs are sent to them.
  
 ```
 ./bin/kafka-topics.sh --bootstrap-server=<<list of your brokers>>  --list
@@ -68,9 +72,9 @@ kubectl get svc nginx-service-loadbalancer
 4. Login to your OpenSearch Dashboard as admin and verify the indexes are created for each of namespace enabled to log to OpenSearch. 
 
 
-* Fluent-bit allows you to choose your parser. Annotate your pods with following to choose your parser.
+* If you have applications requiring different parsers for your pods, Fluent-bit allows you to choose your parser. Annotate your pods with following to choose your parser.
    ```
-      fluentbit.io/parser: apache
+      fluentbit.io/parser: <parser-name>
    ```
 * If you want to completely opt out of logging for any of your pods. Use
 
