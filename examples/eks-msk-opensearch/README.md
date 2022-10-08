@@ -31,7 +31,7 @@ Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
 
 * To get started, edit 0-proivder.tf to update backend S3 bucket , region and key prefix.
 * 
-* [Optional] Edit 3-variables.tf to create/edit more namespaces and enable logging on them. In this example we are creating two namespaces."enable_logs_to_es" is a boolean value which is true .i.e means enable logging for this name space
+* [Optional] Edit 3-variables.tf to create/edit more namespaces and enable logging on them. In this example we are creating two namespaces."enable_logs_to_es" is a boolean value which when tru will enable logging for the namespace.
 ```
 default = [
     {
@@ -43,7 +43,7 @@ default = [
       "enable_logs_to_es" = true,
 ```
 
-* Follow terraform instructions from section below ,terraform will create EKS cluster/MSK and OpenSearch compnonents and install fluent-bit in 'logging' namespace and also create a 'example' namespace.
+* Follow terraform instructions from section below ,terraform will create EKS cluster/MSK and OpenSearch cluster and install fluent-bit in 'logging' namespace and also create a 'example' namespace from definition above.
 
 1. run 
 ```
