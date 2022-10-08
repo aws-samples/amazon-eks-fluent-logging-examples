@@ -2,16 +2,19 @@
 
 In this example, we will showcase how to send your application logs from EKS to OpenSearch via Amazon MSK (managed KAFKA). We will use tenant notion using EKS "namespace" such that each tenant has a seperate namespace.  The solution helps to meet following use cases in a multi-tenant deployment from EKS cluster.
 
-* Use of Kafka as broker will de-couple log forwarding directly from your EKS cluster to OpenSearch such that KAFKA can store logs if the OpenSearch is facing any issues or challenges with consuming logs.
-* you can use multilple KAFKA consumers or Connectors to send logs from your Podsto different destinations of your choice such as S3 or CloudWatch Logs .So Kafka can act as a Fan-Out source of your application logs.
-* Seperate KAFKA topics for each tenant will help you meet tenant's Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX  per topic, hence giving tenant isolation at OpenSearch also.
+* Use of a broker to de-couple log sending directly to OpenSearch such that broker can store logs if the OpenSearch is facing any issues or challenges with consuming logs.In this example we will use Amazon MSK to store our logs.
 
-To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is one of the most popular opensource log collector/processor for kubernetes workloads which can send logs to  many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses OUTPUT plugins to forward logs these destinations. In our example we will use 'KAFKA' OUTPUT plugin.
+* Fan out logs to multiple destinations.We can use KAFKA consumers or Connectors to send logs from your Pods to different destinations of your choice such as S3 or CloudWatch Logs. So Kafka can act as a Fan-Out source of your application logs.
 
-Fluent Bit will run as a DaemonSet on your EKS cluster to tail /var/log/containers/*.log on the EKS cluster and use grep FILTER to process logs for defined namespaces.
-We are using a Lua script filter in the configuration file which is used to set topic names for KAFKA topics such that each namespace will have a corresponding topic "logs_namespace" this gives our topics a unique name if KAFKA broker is being used/shared between more than many applications.
+* Seperate KAFKA topics for each tenant will help you meet tenant's Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX per topic, hence giving tenant isolation at OpenSearch also.
 
-In the end we are using Amazon MSK connector for OpenSearch we will send these logs to Opensearch such that each namespace(tenant) will have one Index.
+To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is one of the most popular opensource log collector/processor for kubernetes workloads which can send logs to  many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses OUTPUT plugins to forward logs to these destinations. In our example we will use 'KAFKA' OUTPUT plugin.
+
+Fluent Bit will run as a DaemonSet on your EKS cluster to tail /var/log/containers/*.log on the EKS cluster and use grep FILTER to process logs for configured namespaces.
+
+Fluent bit configuration file has a Lua script FILTER  which is used to set topic names for KAFKA topics such that each tenant/namespace will have a corresponding unique topic "logs_<namespace>". This gives our topics a unique name if KAFKA broker is being used/shared between more than many applications.
+
+To consume these logs from KAFKA and send to OpenSearch , we are using KAFKA connector for OpenSearch to Opensearch such that each namespace(tenant) will have one Index.
 
 The terraform code in terraform directory which will create an EKS cluster, MSK cluster, Kafka custom plugin,MSK Connector for OpenSearch  and OpenSearch domain in VPC.
 
