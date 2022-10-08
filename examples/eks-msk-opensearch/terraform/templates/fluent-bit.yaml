@@ -63,16 +63,25 @@ config:
         Use_Kubelet         On
         Kubelet_Port        10250
         Buffer_Size         0
+
+    # Include logs for configured namespace
+    [FILTER]
+        Name                grep
+        Match               application.*
+        Regex               $kubernetes['namespace_name'] ${namespaces}
+
      [FILTER]
         Name                lua
-        Match               kube.*
+        Match               application.*
         call                set_topic
         code                function set_topic(tag, timestamp, record) if record["kubernetes"]["namespace_name"] ~= nil then record["namespace"] = "logs_" .. record["kubernetes"]["namespace_name"] end return 2, timestamp, record end
+
 # We output the logs coming out of the Kubernetes Filter to KAFKA.
-  outputs: |
+ 
+ outputs: |
     [OUTPUT]
         Name                kafka
-        Match               kube.*
+        Match               application.*
         Brokers             ${kafka_brokers}
         topics              logs_kubernetes
         topic_key           namespace
@@ -112,17 +121,4 @@ config:
         Time_Key            time
         Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
 
-    [FILTER]
-        Name                kubernetes
-        Match               kube.*
-        K8S-Logging.Parser  On
-        K8S-Logging.Exclude On
-
-    # Include logs for configured namespace
-    [FILTER]
-        Name                grep
-        Match               kube.*
-        Regex               $kubernetes['namespace_name'] ${namespaces}
-
-   
   
