@@ -22,9 +22,9 @@ config:
         Log_Level                 info
         Daemon                    off
         Parsers_File              parsers.conf
-        HTTP_Server               ${HTTP_SERVER}
+        HTTP_Server               On
         HTTP_Listen               0.0.0.0
-        HTTP_Port                 ${HTTP_PORT}
+        HTTP_Port                 2020
         storage.path              /var/fluent-bit/state/flb-storage/
         storage.sync              normal
         storage.checksum          off
