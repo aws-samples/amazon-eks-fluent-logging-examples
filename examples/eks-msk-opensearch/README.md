@@ -6,7 +6,7 @@ In this example, we will showcase how to send your application logs from EKS to 
 
 * Fan out logs to multiple destinations.We can use KAFKA consumers or Connectors to send logs from your Pods to different destinations of your choice such as S3 or CloudWatch Logs. So Kafka can act as a Fan-Out source of your application logs.
 
-* Seperate KAFKA topics for each tenant will help you meet tenant's Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX per topic, hence giving tenant isolation at OpenSearch also.
+* Seperate KAFKA topics for each tenant to achieve tenant's log Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX per topic, hence giving tenant isolation at OpenSearch also.
 
 To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is one of the most popular opensource log collector/processor for kubernetes workloads which can send logs to  many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses OUTPUT plugins to forward logs to these destinations. In our example we will use 'KAFKA' OUTPUT plugin.
 
