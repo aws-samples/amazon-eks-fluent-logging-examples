@@ -10,7 +10,7 @@ In this example, we will showcase how to send your application logs from EKS to 
 
 To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is alightweight, and highly scalable logging and metrics processor and forwarder and can be used for kubernetes workloads which to send logs to   many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses following notions to process logs.
 
-* INPUT to define how to collect date/events.
+* INPUT to define how to collect data/events.
 * FILTER to modify data to add/remove fields or enrich fields.
 * OUTPUT to configure plugins to forward logs to endpoints like S3,CloudWatch etc. In our example we will use 'KAFKA' OUTPUT plugin.
 
