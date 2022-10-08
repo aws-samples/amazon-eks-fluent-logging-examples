@@ -2,9 +2,9 @@
 
 In this example, we will showcase how to send your application logs from EKS to OpenSearch via Amazon MSK (managed KAFKA). We will use tenant notion using EKS "namespace" such that each tenant has a seperate namespace.  The solution helps to meet following use cases in a multi-tenant deployment from EKS cluster.
 
-* Use of a broker to de-couple log sending directly to OpenSearch such that broker can store logs if the OpenSearch is facing any issues or challenges with consuming logs.In this example we will use Amazon MSK to store our logs.
+* Use of a broker to de-couple sending logs directly to OpenSearch so that broker can store logs if the OpenSearch is not available or having  some issues. In this example we will use Amazon MSK to store our logs.
 
-* Fan out logs to multiple destinations.We can use KAFKA consumers or Connectors to send logs from your Pods to different destinations of your choice such as S3 or CloudWatch Logs. So Kafka can act as a Fan-Out source of your application logs.
+* Fan out logs to multiple destinations. We can use KAFKA consumers or Connectors to send logs from your Pods to different destinations of your choice such as S3 or CloudWatch Logs. So Kafka can act as a Fan-Out source of your application logs.
 
 * Seperate KAFKA topics for each tenant to achieve tenant's log Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX per topic, hence giving tenant isolation at OpenSearch also.
 
