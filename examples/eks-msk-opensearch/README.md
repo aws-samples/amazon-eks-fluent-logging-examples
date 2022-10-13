@@ -40,7 +40,7 @@ Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
 
 * To get started, edit 0-proivder.tf to update backend S3 bucket , region and key prefix.
 * 
-* [Optional] Edit 3-variables.tf to create/edit more namespaces and enable logging on them. In this example we are creating two namespaces."enable_logs_to_es" is a boolean value which when tru will enable logging for the namespace.
+* [Optional] Edit 3-variables.tf to create/edit more namespaces and enable logging on them. In this example we are creating two namespaces. "enable_logs_to_es" is a boolean value which when tru will enable logging for the namespace.
 ```
 default = [
     {
@@ -93,10 +93,10 @@ fluentbit.io/exclude: "true"
 
 ```
  **Multi-tenancy with OpenSearch**
+    
     Logs being sent to OpenSearch with above mentioned approach will create unique indexes with the same name of logs_<namespace> name. That gives OpenSearch/Organisation adminstrators capability to create tenant,roles with required permission Indexesso that they can assign to OpenSearch users.
     
     Please follow the reference blog below to achieve this with OpenSearch.
-    
-* To configure and use RBAC with OpenSearch , you can follow instructions from https://aws.amazon.com/blogs/apn/storing-multi-tenant-saas-data-with-amazon-opensearch-service/
+    * https://aws.amazon.com/blogs/apn/storing-multi-tenant-saas-data-with-amazon-opensearch-service/
 
 
