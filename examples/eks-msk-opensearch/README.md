@@ -83,9 +83,9 @@ kubectl get svc nginx-service-loadbalancer
 
 
 * If you have applications requiring different parsers for your pods, Fluent-bit allows you to choose your parser. Annotate your pods with following to choose your parser.
-   ```
-      fluentbit.io/parser: <parser-name>
-   ```
+```
+fluentbit.io/parser: <parser-name>
+```
 * If you want to completely opt out of logging for any of your pods. Use
 
 ```
