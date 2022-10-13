@@ -93,7 +93,10 @@ fluentbit.io/exclude: "true"
 
 ```
  **Multi-tenancy with OpenSearch**
-    Logs being sent to OpenSearch 
+    Logs being sent to OpenSearch with above mentioned approach will create unique indexes with the same name of logs_<namespace> name. That gives OpenSearch/Organisation adminstrators capability to create tenant,roles with required permission Indexesso that they can assign to OpenSearch users.
+    
+    Please follow the reference blog below to achieve this with OpenSearch.
+    
 * To configure and use RBAC with OpenSearch , you can follow instructions from https://aws.amazon.com/blogs/apn/storing-multi-tenant-saas-data-with-amazon-opensearch-service/
 
 
