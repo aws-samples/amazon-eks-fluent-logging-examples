@@ -37,9 +37,9 @@ Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
 * Note. Terraform code will create VPC and all required components. But your OpenSearch dashboard will not be accessible over internet, so you might consider using a AWS client VPN ( or any connectivity method to allow you access to dashboard). you can also launch use a Microsoft windows instance in same VPC and access it via RDP to access your OpenSearch dashboard 
 
 #### Instructions
-
+* Clone the repository.
+* cd into amazon-eks-fluent-logging-examples/examples/eks-msk-opensearch/terraform.
 * To get started, edit 0-proivder.tf to update backend S3 bucket , region and key prefix.
-* 
 * [Optional] Edit 3-variables.tf to create/edit more namespaces and enable logging on them. In this example we are creating two namespaces. "enable_logs_to_es" is a boolean value which when tru will enable logging for the namespace.
 ```
 default = [
@@ -52,7 +52,7 @@ default = [
       "enable_logs_to_es" = true,
 ```
 
-* Follow terraform instructions from section below ,terraform will create EKS cluster/MSK and OpenSearch cluster and install fluent-bit in 'logging' namespace and also create a 'example' namespace from definition above.
+* Follow terraform instructions from section below ,terraform will create EKS cluster,MSK cluster and OpenSearch domain and MSK Connector for Kafka. Also it will create/install EKS components like namespace/fluent-bit daemonset.
 
 1. run 
 ```
