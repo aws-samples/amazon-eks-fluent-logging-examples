@@ -63,7 +63,7 @@ terraform apply
 Terraform apply will ask you for OpneSearch domain master password which you will later use to login to OpneSearch Dashboard. Note it down and keep it safe.
 
 * Wait for terraform to complete 
-2. Deploy a sample nginx pod and service  in 'example' namespace.
+2. Now let us Deploy a sample nginx pod and service  in 'example' namespace. The deployment will help us to generate some logs for samples.
 ```
 kubectl config set-context --current --namespace=example
 kubectl apply -f example-deployment.yaml
