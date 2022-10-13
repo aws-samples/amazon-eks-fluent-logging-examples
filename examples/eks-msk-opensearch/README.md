@@ -94,7 +94,7 @@ fluentbit.io/exclude: "true"
     
  **Configure Multi-tenancy on OpenSearch**
     
-    Logs being sent to OpenSearch with above mentioned approach will create unique indexes with the same name of logs_<namespace> name. That gives OpenSearch/Organisation adminstrators capability to create tenant,roles with required permission Indexesso that they can assign to OpenSearch users.
+ Logs being sent to OpenSearch with above mentioned approach will create unique indexes with the same name of logs_<namespace> name. That gives OpenSearch/Organisation adminstrators capability to create tenant,roles with required permission Indexesso that they can assign to OpenSearch users.
     
 Please follow the reference blog below to achieve this with OpenSearch.
 https://aws.amazon.com/blogs/apn/storing-multi-tenant-saas-data-with-amazon-opensearch-service/
