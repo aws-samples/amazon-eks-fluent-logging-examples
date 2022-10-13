@@ -92,6 +92,8 @@ kubectl get svc nginx-service-loadbalancer
 fluentbit.io/exclude: "true"
 
 ```
+ **Multi-tenancy with OpenSearch**
+    Logs being sent to OpenSearch 
 * To configure and use RBAC with OpenSearch , you can follow instructions from https://aws.amazon.com/blogs/apn/storing-multi-tenant-saas-data-with-amazon-opensearch-service/
 
 
