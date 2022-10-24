@@ -19,7 +19,7 @@ In this example, we will showcase how to send your application logs from Amazon 
 
 * Seperate KAFKA topics for each tenant to achieve tenant's log Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX per topic, hence giving tenant isolation at OpenSearch also.
 
-To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is a lightweight, and highly scalable logging and metrics processor and forwarder and can be used for kubernetes workloads  to send logs to many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses following notions to process logs.
+To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-bit is a lightweight, and highly scalable logging and metrics processor and forwarder and can be used for kubernetes workloads  to send logs to many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses following configuration diretives to process incoming logs.
 
 * INPUT to define How to collect data/events.
 * FILTER to modify data to add/remove fields or enrich fields.
