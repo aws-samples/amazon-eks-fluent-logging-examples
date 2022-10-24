@@ -9,7 +9,7 @@ In this example, we will showcase how to send your application logs from Amazon 
 * * Tenant - A tenant will be used to refer to a seperate deployment of microservices/pods 
 * * Broker - A broker is a software services to decouple publisher and consumers. In generic terms it will be our message queue which will store the log messages before these are sent for visulaization. 
 * * MSK - It refers to Amazon Managed Service for Kafka ( Our broker in this case) 
-* * Terraform - It's hasrhcorp tool to defind infrastructure as a code 
+* * Terraform - It's Hashicorp's tool to define infrastructure as a code 
 
 **We will address following use cases in our solution.**
 
