@@ -25,7 +25,7 @@ To achieve this we will use "fluent-bit" to collect logs from your pods. Fluent-
 * FILTER to modify data to add/remove fields or enrich fields.
 * OUTPUT to configure plugins to forward logs to endpoints like S3,CloudWatch etc. In our example we will use 'KAFKA' OUTPUT plugin.
 
-Here in our case , Fluent Bit will run as a Kubernetes DaemonSet on your EKS cluster to tail /var/log/containers/*.log on the EKS cluster and use grep FILTER to process logs for configured namespaces.
+Here in our case , Fluent Bit will run as a Kubernetes DaemonSet on your EKS cluster to colled logs from Pods on  EKS cluster.
 
 We have a fluent-bit template in "template" directory, which terraform will use to generate a run-time config from the configuration values of namespaces,brokers etc.
 
