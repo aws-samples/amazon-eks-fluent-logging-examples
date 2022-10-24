@@ -11,6 +11,7 @@ In this example, we will showcase how to send your application logs from Amazon 
 * * MSK - It refers to Amazon Managed Service for Kafka ( Our broker in this case) 
 * * Terraform - It's hasrhcorp tool to defind infrastructure as a code 
 
+**We will address following use cases in our solutions.**
 
 * Use of a broker to de-couple sending logs directly to OpenSearch so that broker can store logs if the OpenSearch is not available or having  some issues. In this example we will use Amazon MSK to store our logs.
 
