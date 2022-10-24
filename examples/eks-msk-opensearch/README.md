@@ -1,7 +1,7 @@
 ## Multi-Tenant logging using Fluent-bit, EKS , Amazon MSK and  Amazon OpenSearch
 
 
-In this example, we will showcase how to send your application logs from Amazon Kubernetes Cluster to Amazon OpenSearch via Amazon MSK (managed KAFKA). 
+In this example, we will showcase how to send your application logs from Amazon Kubernetes Cluster to Amazon OpenSearch for vislualization and dashboarding using Amazon MSK (managed KAFKA). 
 
 
 **Let us first start by explaining some of the key terms we will refer throught the solution .**
@@ -10,9 +10,6 @@ In this example, we will showcase how to send your application logs from Amazon 
 * * Broker - A broker is a software services to decouple publisher and consumers. In generic terms it will be our message queue which will store the log messages before these are sent for visulaization. **
 * * MSK - It refers to Amazon Managed Service for Kafka ( Our broker in this case) **
 * * Terraform - It's hasrhcorp tool to defind infrastructure as a code **
-
-
-We will use tenant (an isloated deployment of microservices/pods) notion using Kubernetes namespace so that each tenant has a seperate namespace. 
 
 
 * Use of a broker to de-couple sending logs directly to OpenSearch so that broker can store logs if the OpenSearch is not available or having  some issues. In this example we will use Amazon MSK to store our logs.
