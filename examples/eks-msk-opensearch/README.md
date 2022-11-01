@@ -33,7 +33,7 @@ Also note that Fluent bit configuration file has a Lua script FILTER  which is u
 
 To consume these logs from MSK and send to OpenSearch , we are using KAFKA connector for OpenSearch to Opensearch such that each namespace(tenant) will have one Index.
 
-The terraform code in terraform directory which will create an EKS cluster, MSK cluster, Kafka custom plugin,MSK Connector for OpenSearch  and OpenSearch domain in VPC.
+The terraform code in terraform directory which will create an EKS cluster, MSK cluster,MSK Connector for OpenSearch  and OpenSearch domain in a VPC.
 
 Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
 
