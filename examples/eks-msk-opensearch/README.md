@@ -25,13 +25,13 @@ To achieve this we will use [fluent-bit](https://fluentbit.io/) to collect logs 
 * FILTER to modify data to add/remove fields or enrich fields.
 * OUTPUT to configure plugins to forward logs to endpoints like S3,CloudWatch etc. In our example we will use 'KAFKA' OUTPUT plugin.
 
-Here in our case , Fluent Bit will run as a Kubernetes DaemonSet on your EKS cluster to colled logs from Pods on  EKS cluster.
+Here in our case , Fluent Bit will run as a Kubernetes DaemonSet on your EKS cluster to collect logs from Pods.
 
 We have a fluent-bit template in "template" directory, which terraform will use to generate a run-time config from the configuration values of namespaces,brokers etc.
 
-Also note that Fluent bit configuration file has a Lua script FILTER  which is used to set topic names for KAFKA topics such that each tenant/namespace will have a corresponding unique topic "logs_<namespace>". This gives our topics a unique name if KAFKA broker is being used/shared between more than many applications.
+Also note that Fluent bit configuration file has a Lua script FILTER  which is used to set topic names for KAFKA topics such that each tenant/namespace will have a corresponding unique topic "logs_<namespace>". This gives our topics a unique name if KAFKA broker is being used/shared between more than one applications.
 
-To consume these logs from MSK and send to OpenSearch , we are using KAFKA connector for OpenSearch to Opensearch such that each namespace(tenant) will have one Index.
+To consume these logs from MSK and send to OpenSearch , we are using KAFKA connector for OpenSearch creating unique index for each namespace.
 
 The terraform code in terraform directory which will create an EKS cluster, MSK cluster,MSK Connector for OpenSearch  and OpenSearch domain in a VPC.
 
