@@ -8,7 +8,7 @@
 * * [Terraform](https://www.terraform.io/) - It's Hashicorp's tool to define infrastructure as a code .
 * * Amazon Opensearch - OpenSearch(https://aws.amazon.com/what-is/opensearch/) is a distributed, community-driven, Apache 2.0-licensed, 100% open-source search and analytics suite used for a broad set of use cases like real-time application monitoring, log analytics, and website search
 
-In this example, we will showcase how to send your application logs from Amazon Elastic Kubernetes Service (EKS) cluster (https://aws.amazon.com/eks/) to [Amazon OpenSearch](https://aws.amazon.com/what-is/opensearch/) for vislualization and dashboarding using  MSK broker. 
+In this example, we will showcase how to send your application logs from Amazon Elastic Kubernetes Service (EKS) cluster (https://aws.amazon.com/eks/) to [Amazon OpenSearch](https://aws.amazon.com/what-is/opensearch/) for vislualization. 
 
 
 **We will address following use cases in our solution.**
