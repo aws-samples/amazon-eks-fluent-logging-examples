@@ -1,7 +1,7 @@
 ## Multi-Tenant logging from EKS using Fluent-bit, Amazon MSK and  Amazon OpenSearch
 
 
-In this example, we will showcase how to send your application logs from Amazon Kubernetes Cluster to Amazon OpenSearch for vislualization and dashboarding using Amazon MSK (managed KAFKA). 
+In this example, we will showcase how to send your application logs from Amazon Kubernetes Cluster to [Amazon OpenSearch](https://aws.amazon.com/what-is/opensearch/) for vislualization and dashboarding using Amazon MSK (managed KAFKA). 
 
 
 **Let us first start by explaining some of the key terms we will refer throught the solution .**
