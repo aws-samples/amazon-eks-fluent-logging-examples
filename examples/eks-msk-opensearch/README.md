@@ -30,7 +30,7 @@ Fluent-bit will run as a Kubernetes DaemonSet on our EKS cluster.We have a fluen
 
 Also note that fluent-bit configuration file has a lua script FILTER  which is used to set topic names for KAFKA topics such that each tenant will have a corresponding unique topic name of logs_<namespace>.This gives our topics a unique name if KAFKA broker is being used/shared between more than one applications.
 
-We are using [OpenSearch connector for Kafka](https://github.com/aiven/opensearch-connector-for-apache-kafka) to send these logs from MSK  to OpenSearch.
+We are using [OpenSearch connector for Kafka](https://github.com/aiven/opensearch-connector-for-apache-kafka) to send logs from our KAFKA brokers to OpenSearch.
 
 The terraform code in terraform directory which will create an EKS cluster,MSK cluster,MSK Connector for OpenSearch  and OpenSearch domain in a VPC.
 
