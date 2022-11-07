@@ -62,7 +62,7 @@ default = [
       "enable_logs_to_es" = true,
 ```
 
-1. Run following  terraform commands to create infrastructure. 
+1. Run following terraform commands to create infrastructure. 
 ```
 terraform init
 terraform apply
@@ -70,7 +70,7 @@ terraform apply
 ```
 Terraform apply will ask you for OpenSearch domain master password which you will later use to login to OpenSearch Dashboard.Note it down and keep it safe.
 
-2. Now let us Deploy a sample nginx pod and service  in 'example' namespace. The deployment will help us to generate some logs for samples.
+2. Deploy a sample nginx pod and service in 'example' namespace.The deployment will help us to generate some logs for samples.
 ```
 kubectl config set-context --current --namespace=example
 kubectl apply -f example-deployment.yaml
@@ -79,7 +79,7 @@ kubectl get svc nginx-service-loadbalancer
 ```
 * Note down the name of loadBalancer and copy it in your browser and hit it few times to generate access logs.
 
-3. Login to machine which has KAFKA client binary are installed and list KAFKA topics to verify logs_example topic is created. Use following commands to verify your topics and messages in topic.
+3. Login to machine which has KAFKA client binary are installed and list KAFKA topics to verify logs_example topic is created.Use following commands to verify your topics and messages in topic.
  
 ```
 ./bin/kafka-topics.sh --bootstrap-server=<<list of your brokers>>  --list
@@ -89,11 +89,11 @@ kubectl get svc nginx-service-loadbalancer
 4. Login to your OpenSearch Dashboard as admin and verify the indexes are created for each of namespace enabled to log to OpenSearch. 
 
 
-* If you have applications requiring different parsers for your pods, fluent-bit allows you to choose your parser. Annotate your application pods with following annotation to choose your parser.
+* If you have applications requiring different parsers for your pods,fluent-bit allows you to choose your parser.Annotate your application pods with following annotation to choose your parser.
 ```
 fluentbit.io/parser: <parser-name>
 ```
-* If you want to completely opt out of logging for any of your pods. Use followin annotation.
+* If you want to completely opt out of logging for any of your pods.Use following annotation.
 
 ```
 fluentbit.io/exclude: "true"
@@ -101,7 +101,7 @@ fluentbit.io/exclude: "true"
     
  **Configure Multi-tenancy on OpenSearch**
     
- Logs being sent to OpenSearch with this solution will create unique indexes with the same name of logs_<namespace> name. That gives OpenSearch/Organisation adminstrators capability to create tenants,roles with required permission on Indexes and assign to OpenSearch users.
+Logs being sent to OpenSearch with this solution will create unique indexes with the same name of logs_<namespace> name.That gives OpenSearch/Organisation adminstrators capability to create tenants,roles with required permission on Indexes and assign to OpenSearch users.
     
 Please follow the reference blog below to achieve this with OpenSearch.
 https://aws.amazon.com/blogs/apn/storing-multi-tenant-saas-data-with-amazon-opensearch-service/
