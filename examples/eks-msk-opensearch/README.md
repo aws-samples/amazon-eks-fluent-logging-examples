@@ -12,11 +12,11 @@ In this solution, we will showcase how to collect application logs from pods fro
 
 
 **We will address following use cases in our solution.**
-* Use of a broker to de-couple sending logs directly to OpenSearch so that broker can store logs if the OpenSearch is not available or having  some issues. In this example we will use Amazon MSK to store our logs.
+* Use of a broker to de-couple sending logs directly to OpenSearch so that broker can store logs if the OpenSearch is not available or having  some issues.In this example we will use Amazon MSK to store our logs.
 
-* Fan out logs to multiple destinations. We can use KAFKA consumers or Connectors to send logs from your Pods to different destinations of your choice such as S3 or CloudWatch Logs. So Kafka can act as a Fan-Out source of your application logs.
+* Fan out logs to multiple destinations. We can use KAFKA consumers or Connectors to send logs from your Pods to different destinations of your choice such as S3 or CloudWatch Logs.So Kafka can act as a Fan-Out source of your application logs.
 
-* Seperate KAFKA topics for each tenant to achieve tenant's log Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX per topic, hence giving tenant isolation at OpenSearch also.
+* Seperate KAFKA topics for each tenant to achieve tenant's log Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX per topic,hence giving tenant isolation at OpenSearch also.
 
 **How is fluent-bit used in this solution.**
 
@@ -26,7 +26,7 @@ In this solution , we are using  [fluent-bit](https://fluentbit.io/) to collect 
 * FILTER to modify data to add/remove fields or enrich fields.
 * OUTPUT to configure plugins to forward logs to endpoints like S3, CloudWatch etc. In our solution we will use 'KAFKA' OUTPUT plugin.
 
-Fluent-bit will run as a Kubernetes DaemonSet on our EKS cluster.We have a fluent-bit config template in "template" directory,which terraform will use to generate a run-time config from the configuration values of namespaces,brokers config.
+Fluent-bit will run as a Kubernetes daemonSet on our EKS cluster.We have a fluent-bit config template in "template" directory,which terraform will use to generate a run-time config from the configuration values of namespaces,brokers config.
 
 Also note that fluent-bit configuration file has a lua script FILTER  which is used to set topic names for KAFKA topics such that each tenant will have a corresponding unique topic name of logs_<namespace>.This gives our topics a unique name if KAFKA broker is being used/shared between more than one applications.
 
@@ -44,7 +44,7 @@ Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
 * Install kubectl (https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/) and kafka clients binaries to verify your KAFKA brokers (optional) on a machine which can access your EKS cluster and MSK Cluster.
 
 
-**Note**. Terraform code will create VPC and all required components. But your OpenSearch dashboard will not be accessible over internet, so you might consider using a AWS client VPN/RDP access to a windows EC2 instance (or any connectivity method to allow you access to dashboard).
+**Note**. Terraform code will create VPC and all required components.But your OpenSearch dashboard will not be accessible over internet, so you might consider using a AWS client VPN/RDP access to a windows EC2 instance (or any connectivity method to allow you access to dashboard).
 
 #### Instructions
 * Clone the repository.
@@ -62,8 +62,6 @@ default = [
       "enable_logs_to_es" = true,
 ```
 
-* Follow terraform instructions from section below ,terraform will create EKS cluster,MSK cluster and OpenSearch domain and MSK Connector for Kafka. Also it will create/install EKS components like namespace/fluent-bit daemonset.
-
 1. run following  terraform commands to create infrastructure. 
 ```
 terraform init
@@ -73,7 +71,7 @@ terraform apply
 Terraform apply will ask you for OpneSearch domain master password which you will later use to login to OpneSearch Dashboard. Note it down and keep it safe.
 
 * Wait for terraform to complete. 
-2. Now let us Deploy a sample nginx pod and service  in 'example' namespace. The deployment will help us to generate some logs for samples.
+2.Now let us Deploy a sample nginx pod and service  in 'example' namespace. The deployment will help us to generate some logs for samples.
 ```
 kubectl config set-context --current --namespace=example
 kubectl apply -f example-deployment.yaml
