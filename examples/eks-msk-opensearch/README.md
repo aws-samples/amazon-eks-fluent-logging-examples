@@ -44,7 +44,7 @@ Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
 * Install kubectl (https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/) and kafka clients binaries to verify your KAFKA brokers (optional) on a machine which can access your EKS cluster and MSK Cluster.
 
 
-* Note. Terraform code will create VPC and all required components. But your OpenSearch dashboard will not be accessible over internet, so you might consider using a AWS client VPN ( or any connectivity method to allow you access to dashboard). you can also launch use a Microsoft windows instance in same VPC and access it via RDP to access your OpenSearch dashboard 
+**Note**. Terraform code will create VPC and all required components. But your OpenSearch dashboard will not be accessible over internet, so you might consider using a AWS client VPN ( or any connectivity method to allow you access to dashboard). you can also launch use a Microsoft windows instance in same VPC and access it via RDP to access your OpenSearch dashboard 
 
 #### Instructions
 * Clone the repository.
