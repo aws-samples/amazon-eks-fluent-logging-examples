@@ -62,16 +62,15 @@ default = [
       "enable_logs_to_es" = true,
 ```
 
-1. run following  terraform commands to create infrastructure. 
+1. Run following  terraform commands to create infrastructure. 
 ```
 terraform init
 terraform apply
 
 ```
-Terraform apply will ask you for OpneSearch domain master password which you will later use to login to OpneSearch Dashboard. Note it down and keep it safe.
+Terraform apply will ask you for OpenSearch domain master password which you will later use to login to OpenSearch Dashboard.Note it down and keep it safe.
 
-* Wait for terraform to complete. 
-2.Now let us Deploy a sample nginx pod and service  in 'example' namespace. The deployment will help us to generate some logs for samples.
+2. Now let us Deploy a sample nginx pod and service  in 'example' namespace. The deployment will help us to generate some logs for samples.
 ```
 kubectl config set-context --current --namespace=example
 kubectl apply -f example-deployment.yaml
