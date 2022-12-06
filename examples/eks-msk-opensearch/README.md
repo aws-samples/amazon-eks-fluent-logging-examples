@@ -26,6 +26,8 @@ Log routing - You can forward logs to various destinations for different purpose
 
 ### Fluent Bit config
 
+In this example, we used the Lua filter plugin to add a key `namespace` with value of Kubernetes namespace name prefixed by `logs_`. This key is subsequently used in the Kafka output plugin to define Kafka topic name dynamically. Therefore, all logs belong to a Kubernetes namespace will be grouped by a Kafka topic.
+
 ## Prerequisites
 
 * An Amazon S3 bucket as a Terraform backend to store Terraform state data files.
