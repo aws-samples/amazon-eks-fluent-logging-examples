@@ -93,12 +93,12 @@ Login to machine which has KAFKA client binary are installed and list KAFKA topi
 Login to your OpenSearch Dashboard as admin and verify the indexes are created for each of namespace enabled to log to OpenSearch. 
 
 
-* If you have applications requiring different parsers for your pods,fluent-bit allows you to choose your parser.
+If you have applications requiring different parsers for your pods,fluent-bit allows you to choose your parser.
   Annotate your application pods with following annotation to choose your parser.
 ```
 fluentbit.io/parser: <parser-name>
 ```
-* If you want to completely opt out of logging for any of your pods.Use following annotation.
+If you want to completely opt out of logging for any of your pods.Use following annotation.
 
 ```
 fluentbit.io/exclude: "true"
