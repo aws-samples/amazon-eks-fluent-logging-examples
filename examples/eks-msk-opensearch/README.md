@@ -8,7 +8,7 @@ In this example, we will showcase how to build a centralized logging solution fo
 
 [Amazon MSK](https://aws.amazon.com/msk/) to forward log events to various destination and as a buffering layer to avoid indexing pressure in Amazon OpenSearch. This layer will provide tenant isolation and improve resilience of the solution.
 
-[Amazon OpenSearch]https://aws.amazon.com/what-is/opensearch/ to monitor, visualize, and analyze logs. OpenSearch is a distributed, community-driven, Apache 2.0-licensed, 100% open-source search and analytics suite used for a broad set of use cases like real-time application monitoring, log analytics, and website search.
+[Amazon OpenSearch](https://aws.amazon.com/what-is/opensearch/) to monitor, visualize, and analyze logs. OpenSearch is a distributed, community-driven, Apache 2.0-licensed, 100% open-source search and analytics suite used for a broad set of use cases like real-time application monitoring, log analytics, and website search.
 
 Terraform by HashiCorp, is an infrastructure as code tool similar to AWS CloudFormation to provision and manage infrastructure on AWS.
 
