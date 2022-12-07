@@ -4,7 +4,7 @@ In this example, we will showcase how to build a centralized logging solution fo
 
 ## Components
 
-Fluent Bit DaemonSet to collect, modify, and enrich logs from applications, and publish the logs to Amazon Managed Streaming for Kafka (Amazon MSK).
+[Fluent Bit](https://fluentbit.io/) DaemonSet to collect, modify, and enrich logs from applications, and publish the logs to Amazon Managed Streaming for Kafka (Amazon MSK).
 
 Amazon MSK to forward log events to various destination and as a buffering layer to avoid indexing pressure in Amazon OpenSearch. This layer will provide tenant isolation and improve resilience of the solution.
 
