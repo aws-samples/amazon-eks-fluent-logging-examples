@@ -79,7 +79,7 @@ kubectl config set-context --current --namespace=example
 kubectl apply -f example-deployment.yaml
 kubectl get svc nginx-service-loadbalancer
 ```
-**Note down the name of loadBalancer and copy it in your browser and hit it few times to generate access logs.
+**Note down the name of loadBalancer and copy it in your browser and hit it few times to generate access logs.**
 
 * Login to machine which has KAFKA client binary are installed and list KAFKA topics to verify logs_example topic is created.Use following commands to verify your topics and messages in topic.
  
