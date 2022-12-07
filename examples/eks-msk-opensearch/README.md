@@ -1,48 +1,55 @@
-## Multi-Tenant logging from EKS using Fluent-bit, Amazon MSK and  Amazon OpenSearch
+# Centralized logging for multi-tenant applications on Amazon EKS
 
-**Let us first start by explaining some of the key terms we will refer throught the solution .**
+In this example, we will showcase how to build a centralized logging solution for multi-tenant environments where applications that belong to different teams or customers run in a shared Amazon EKS cluster.
 
-*  Tenant - A tenant will be used to refer to a seperate deployment of microservices/pods in kubernetes [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/).
-* Broker - A broker is a software services to decouple publisher and consumers. In generic terms it will be our message queue which will store the log messages before these are sent for visulaization. 
-* MSK - It refers to [Amazon Managed Service for Kafka](https://aws.amazon.com/msk/) ( Our broker in this example).
-* [Terraform](https://www.terraform.io/) - It's Hashicorp's tool to define infrastructure as a code .
-* Amazon Opensearch - [OpenSearch](https://aws.amazon.com/what-is/opensearch/) is a distributed, community-driven, Apache 2.0-licensed, 100% open-source search and analytics suite used for a broad set of use cases like real-time application monitoring,log analytics and website search.
+## Components
 
-In this solution, we will showcase how to collect application logs from pods from [EKS](https://aws.amazon.com/eks/) to [Amazon OpenSearch](https://aws.amazon.com/what-is/opensearch/) for vislualization. 
+Fluent Bit DaemonSet to collect, modify, and enrich logs from applications, and publish the logs to Amazon Managed Streaming for Kafka (Amazon MSK).
 
+Amazon MSK to forward log events to various destination and as a buffering layer to avoid indexing pressure in Amazon OpenSearch. This layer will provide tenant isolation and improve resilience of the solution.
 
-**We will address following use cases in our solution.**
-* Use of a broker to de-couple sending logs directly to OpenSearch so that broker can store logs if the OpenSearch is not available or having  some issues.In this example we will use Amazon MSK to store our logs.
+Amazon OpenSearch to monitor, visualize, and analyze logs. OpenSearch is a distributed, community-driven, Apache 2.0-licensed, 100% open-source search and analytics suite used for a broad set of use cases like real-time application monitoring, log analytics, and website search.
 
-* Fan out logs to multiple destinations. We can use KAFKA consumers or Connectors to send logs from your Pods to different destinations of your choice such as S3 or CloudWatch Logs.So Kafka can act as a Fan-Out source of your application logs.
+Terraform by HashiCorp, is an infrastructure as code tool similar to AWS CloudFormation to provision and manage infrastructure on AWS.
 
-* Seperate KAFKA topics for each tenant to achieve tenant's log Isolation(logs in seperate topics) and KAFKA sink connector will then send logs to OpenSearch creating unique INDEX per topic,hence giving tenant isolation at OpenSearch also.
+## Features
 
-**How is fluent-bit used in this solution.**
+Security and compliance - This solution provides data isolation for logs ingested and stored so that each tenant can only access their own logs. It also can help you to meet your compliance requirements, for example anonymizing personally identifiable information (PII) in logs which is required by GDPR.
 
-In this solution , we are using  [fluent-bit](https://fluentbit.io/) to collect logs from your pods. Fluent-bit is a lightweight, and highly scalable logging and metrics processor and forwarder and can be used for kubernetes workloads  to send logs to many supported destniations like CloudWatch Logs, S3 and  OpenSearch. Fluent bit uses following configuration diretives to process incoming logs.
+Business and technical insights -  You can produce business insights such as geographical distribution of customers or popularity of a product over time. Software engineers can also use this solution to troubleshoot an issue, or to create metrics and alarms to proactively notify the application owners of any issues.
 
-* INPUT to define How to collect data/events.
-* FILTER to modify data to add/remove fields or enrich fields.
-* OUTPUT to configure plugins to forward logs to endpoints like S3, CloudWatch etc. In our solution we will use 'KAFKA' OUTPUT plugin.
+Log routing - You can forward logs to various destinations for different purposes such as logs archival, cold logs analysis, and third party observability or security information and event management (SIEM) solutions such as Splunk or Datadog.
 
-Fluent-bit will run as a Kubernetes daemonSet on our EKS cluster.We have a fluent-bit config template in "template" directory,which terraform will use to generate a run-time config from the configuration values of namespaces,brokers config.
+## Architecture
 
-Also note that fluent-bit configuration file has a lua script FILTER  which is used to set topic names for KAFKA topics such that each tenant will have a corresponding unique topic name of logs_<namespace>.This gives our topics a unique name if KAFKA broker is being used/shared between more than one applications.
+![Architecture](Ref-Architecture.png?raw=true "Title")
 
-We are using [OpenSearch connector for Kafka](https://github.com/aiven/opensearch-connector-for-apache-kafka) to send logs from our KAFKA brokers to OpenSearch.
+### Fluent Bit config
 
-The terraform code in terraform directory which will create an EKS cluster,MSK cluster,MSK Connector for OpenSearch  and OpenSearch domain in a VPC.
+In this example, we used the Lua filter plugin to add a key `namespace` with value of Kubernetes namespace name prefixed by `logs_`. This key is subsequently used in the Kafka output plugin to define Kafka topic name dynamically. Therefore, all logs belong to a Kubernetes namespace will be grouped by a Kafka topic.
 
-Reference Architecure ![Architecture](Ref-Architecture.png?raw=true "Title")
+## Prerequisites
 
+* An Amazon S3 bucket as a Terraform backend to store Terraform state data files.
+* An IAM role, or an IAM user principal with required privileges to create resources such as Amazon VPC, Amazon S3 bucket, Amazon EKS cluster, Amazon MSK cluster, and Amazon OpenSearch cluster.
+* The following tools installed on a machine.
+  * Kubectl - for more information, see [Installing or updating kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html).
+  * Terraform - for more information, see [Installing Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli).
+  * Optionally, Apache Kafka client libraries and tools - for more information, see [Create a topic](https://docs.aws.amazon.com/msk/latest/developerguide/create-topic.html).
 
-#### Pre-requisites
+## Instructions
 
-* A S3 bucket for terraform backend.
-* IAM permissions to create resources(VPC/S3 bucket/EKS Cluster/MSK Brokers/OpenSearch Domain).A Administrator access IAM role is recommended.
-* Install kubectl (https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/) and kafka clients binaries to verify your KAFKA brokers (optional) on a machine which can access your EKS cluster and MSK Cluster.
+* Clone the repository
 
+```bash
+git clone https://github.com/aws-samples/amazon-eks-fluent-logging-examples.git
+```
+
+* CD into terraform directory
+
+```bash
+cd amazon-eks-fluent-logging-examples/examples/eks-msk-opensearch/terraform
+```
 
 **Note**. Terraform code will create VPC and all required components.But your OpenSearch dashboard will not be accessible over internet, so you might consider using a AWS client VPN/RDP access to a windows EC2 instance (or any connectivity method to allow you access to dashboard).
 
