@@ -66,14 +66,14 @@ default = [
 ```
 
 
-Run following terraform commands to create infrastructure. 
+* Run following terraform commands to create infrastructure. 
 ```
 terraform init
 terraform apply
 ```
 Terraform apply will ask you for OpenSearch domain master password which you will later use to login to OpenSearch Dashboard.Note it down and keep it safe.
 
-Deploy a sample nginx pod and service in 'example' namespace.The deployment will help us to generate some logs for samples.
+* Deploy a sample nginx pod and service in 'example' namespace.The deployment will help us to generate some logs for samples.
 ```
 kubectl config set-context --current --namespace=example
 kubectl apply -f example-deployment.yaml
@@ -81,14 +81,13 @@ kubectl get svc nginx-service-loadbalancer
 ```
 **Note down the name of loadBalancer and copy it in your browser and hit it few times to generate access logs.
 
-Login to machine which has KAFKA client binary are installed and list KAFKA topics to verify logs_example topic is created.Use following commands to verify your topics and messages in topic.
+* Login to machine which has KAFKA client binary are installed and list KAFKA topics to verify logs_example topic is created.Use following commands to verify your topics and messages in topic.
  
 ```
 ./bin/kafka-topics.sh --bootstrap-server=<<list of your brokers>>  --list
 ./bin/kafka-console-consumer.sh --bootstrap-server <<list of your brokers> --topic logs_example    
 ```
 Login to your OpenSearch Dashboard as admin and verify the indexes are created for each of namespace enabled to log to OpenSearch. 
-
 
 If you have applications requiring different parsers for your pods,fluent-bit allows you to choose your parser.
   Annotate your application pods with following annotation to choose your parser.
