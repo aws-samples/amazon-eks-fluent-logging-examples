@@ -22,6 +22,8 @@ Log routing - You can forward logs to various destinations for different purpose
 
 ## Architecture
 
+In this example, we assumed that you use Kubernetes Namespaces to divide cluster resources between multiple users as a foundation for multi-tenancy. In the following diagram billing, auth, and payment are example of Namespaces to separate applications belong to each tenant.
+
 ![Architecture](Ref-Architecture.png?raw=true "Title")
 
 ### Fluent Bit config
@@ -45,8 +47,86 @@ In this example, we used the Lua filter plugin to add a key `namespace` with val
 git clone https://github.com/aws-samples/amazon-eks-fluent-logging-examples.git
 ```
 
-* CD into terraform directory
+* Change directory into terraform directory
 
 ```bash
 cd amazon-eks-fluent-logging-examples/examples/eks-msk-opensearch/terraform
 ```
+
+Update `0-provider.tf` file with your S3 bucket name, key, and region for Terraform to store its state.
+
+Backend example
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket = "yourbucket"
+    key = "path/to/your/key"
+    region = "us-west-1"
+  }
+```
+
+Optionally, configure `3-variables.tf` file to add Kubernetes namespaces you need. You can also use `enable_logs_to_es` boolean attribute to enable or disable logging for each namespace.
+
+```hcl
+variable "namespaces" {
+  description = "K8s namespaces to create"
+  type = list(object({
+    name              = string
+    enable_logs_to_es = bool
+  }))
+  default = [
+    {
+      "name" : "logging",
+      "enable_logs_to_es" = false,
+    },
+    {
+      "name" : "example",
+      "enable_logs_to_es" = true,
+    }
+  ]
+}
+```
+
+Initialize the Terraform working directory.
+
+```hcl
+terraform init
+```
+
+Create an execution plan to verify the resources that Terraform will create for you.
+
+```hcl
+terraform plan
+```
+
+Executes the actions proposed in a Terraform plan to create the infrastructure. This command will ask you for the OpenSearch domain admin password which you need later to access the OpenSearch dashboard.
+
+```hcl
+terraform apply
+```
+
+Create an nginx deployment in `example` namespace to generate sample logs.
+
+```bash
+kubectl config set-context --current --namespace=example
+kubectl apply -f example-deployment.yaml
+kubectl get svc nginx-service-loadbalancer
+```
+
+Take note of the load balancer url and open it in a browser then hit it a few times to generate sample logs.
+
+Verify `logs_example` Kafka topic is created, and read message from the topic using the following commands.
+
+```bash
+./bin/kafka-topics.sh --bootstrap-server=<list of your brokers>  --list
+./bin/kafka-console-consumer.sh --bootstrap-server <list of your brokers> --topic logs_example
+```
+
+Login to OpenSearch dashboard to visualize our logs.
+
+If you need a custom parser for your application logs, Fluent Bit allows you to suggest a pre-defined parser by annotating your application Pod definition using `fluentbit.io/parser: <parser-name>`. You can also completely opt out of logging for any of your Pods using `fluentbit.io/exclude: "true"` annotation. For more information, see [Fluent Bit - Kubernetes Annotations](https://docs.fluentbit.io/manual/pipeline/filters/kubernetes#kubernetes-annotations).
+
+## Multi-tenancy on OpenSearch
+
+In this solution, all logs from a Kubernetes namespace will be store in a separate index with `logs_<namespace>` naming convention. With this approach, you can define proper access control at Kubernetes namespace or OpenSearch index level for each tenant. For more information see [Storing Multi-Tenant SaaS Data with Amazon OpenSearch Service](https://aws.amazon.com/blogs/apn/storing-multi-tenant-saas-data-with-amazon-opensearch-service/)
