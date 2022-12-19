@@ -61,7 +61,7 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
     cd amazon-eks-fluent-logging-examples/examples/eks-msk-opensearch/terraform
     ```
 
-3. Update `0-provider.tf` file with your S3 bucket name, key, and region for Terraform to store its state.
+3. Update `provider.tf` file with your S3 bucket name, key, and region for Terraform to store its state.
 
     Backend example
 
@@ -74,7 +74,7 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
     }
     ```
 
-4. Optionally, configure `3-variables.tf` file to add Kubernetes namespaces you need. You can also use `enable_logs_to_es` boolean attribute to enable or disable logging for each namespace.
+4. Optionally, configure `variables.tf` file to add Kubernetes namespaces you need. You can also use `enable_logs_to_es` boolean attribute to enable or disable logging for each namespace.
 
     ```hcl
     variable "namespaces" {
