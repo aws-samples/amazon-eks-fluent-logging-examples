@@ -167,7 +167,22 @@ variable "es_master_user_password" {
   sensitive   = true
 
   validation {
-    condition     = can(regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", var.es_master_user_password))
+    condition     = can(regex("[A-Z]", var.es_master_user_password))
+    error_message = "Password must be minimum 8 characters long and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
+  }
+
+  validation {
+    condition     = can(regex("[a-z]", var.es_master_user_password))
+    error_message = "Password must be minimum 8 characters long and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
+  }
+
+  validation {
+    condition     = can(regex("[0-9]", var.es_master_user_password))
+    error_message = "Password must be minimum 8 characters long and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
+  }
+
+  validation {
+    condition     = can(regex("[^a-zA-Z0-9]", var.es_master_user_password))
     error_message = "Password must be minimum 8 characters long and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
   }
 }
