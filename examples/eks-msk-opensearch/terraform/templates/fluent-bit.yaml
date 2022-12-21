@@ -1,0 +1,125 @@
+# Template out the image version and service account name to use so that they can be modified from Terraform.
+image:
+  tag: ${image_version}
+
+serviceAccount:
+  name: ${service_account_name}
+
+# Tolerate all taints so that all nodes are logged.
+tolerations:
+  - key: ""
+    operator: "Exists"
+    effect: "NoExecute"
+
+# Pipeline configuration.
+config:
+  # This is a config for the FluentBit application running the pipeline.
+  # We set the flush interval, log level and where our parsers are stored.
+  # We additionally expose the HTTP service so that Terraform can ping it.
+  service: |
+      [SERVICE]
+        Flush                     30
+        Log_Level                 info
+        Daemon                    off
+        Parsers_File              parsers.conf
+        HTTP_Server               On
+        HTTP_Listen               0.0.0.0
+        HTTP_Port                 2020
+        storage.path              /var/fluent-bit/state/flb-storage/
+        storage.sync              normal
+        storage.checksum          off
+        storage.backlog.mem_limit 5M
+        
+      @INCLUDE application-log.conf
+  extraFiles:
+    application-log.conf: |
+        [INPUT]
+            Name                tail
+            Tag                 application.*
+            Exclude_Path        /var/log/containers/cloudwatch-agent*, /var/log/containers/fluent-bit*, /var/log/containers/aws-node*, /var/log/containers/kube-proxy*
+            Path                /var/log/containers/*.log
+            Docker_Mode         On
+            Docker_Mode_Flush   5
+            Docker_Mode_Parser  container_firstline
+            Parser              docker
+            DB                  /var/fluent-bit/state/flb_container.db
+            Mem_Buf_Limit       50MB
+            Skip_Long_Lines     On
+            Refresh_Interval    10
+            Rotate_Wait         30
+            storage.type        filesystem
+            Read_from_Head      true
+
+        [FILTER]
+            Name                kubernetes
+            Match               application.*
+            Kube_URL            https://kubernetes.default.svc:443
+            Kube_Tag_Prefix     application.var.log.containers.
+            Merge_Log           On
+            Merge_Log_Key       log_processed
+            K8S-Logging.Parser  On
+            K8S-Logging.Exclude Off
+            Labels              Off
+            Annotations         Off
+            Use_Kubelet         On
+            Kubelet_Port        10250
+            Buffer_Size         0
+
+        # Include logs for configured namespace
+        [FILTER]
+            Name                grep
+            Match               application.*
+            Regex               $kubernetes['namespace_name'] ${namespaces}
+
+        [FILTER]
+            Name                lua
+            Match               application.*
+            call                set_topic
+            code                function set_topic(tag, timestamp, record) if record["kubernetes"]["namespace_name"] ~= nil then record["namespace"] = "logs_" .. record["kubernetes"]["namespace_name"] end return 2, timestamp, record end
+
+    parsers.conf: |
+        [PARSER]
+            Name                docker
+            Format              json
+            Time_Key            time
+            Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
+        [PARSER]
+            Name                syslog
+            Format              regex
+            Regex               ^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
+            Time_Key            time
+            Time_Format         %b %d %H:%M:%S
+        [PARSER]
+            Name                container_firstline
+            Format              regex
+            Regex               (?<log>(?<="log":")\S(?!\.).*?)(?<!\\)".*(?<stream>(?<="stream":").*?)".*(?<time>\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}\.\w*).*(?=})
+            Time_Key            time
+            Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
+        [PARSER]
+            Name                cwagent_firstline
+            Format              regex
+            Regex               (?<log>(?<="log":")\d{4}[\/-]\d{1,2}[\/-]\d{1,2}[ T]\d{2}:\d{2}:\d{2}(?!\.).*?)(?<!\\)".*(?<stream>(?<="stream":").*?)".*(?<time>\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}\.\w*).*(?=})
+            Time_Key            time
+            Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
+  
+  outputs: |
+    [OUTPUT]
+        Name                kafka
+        Match               application.*
+        Brokers             ${kafka_brokers}
+        topics              logs_kubernetes
+        topic_key           namespace
+        dynamic_topic       On
+        Timestamp_Key       @timestamp
+        Retry_Limit         5
+        # hides errors "Receive failed: Disconnected" when kafka kills idle connections
+        rdkafka.log.connection.close          false
+        # producer buffer is not included in http://fluentbit.io/documentation/0.12/configuration/memory_usage.html#estimating
+        rdkafka.queue.buffering.max.kbytes    10240
+        # for logs you'll probably want this ot be 0 or 1, not more
+        rdkafka.request.required.acks         1
+
+    
+  
+
+  
