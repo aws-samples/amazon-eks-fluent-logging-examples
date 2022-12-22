@@ -11,6 +11,7 @@ tolerations:
     operator: "Exists"
     effect: "NoExecute"
 
+
 # Set hostNetwork to true and dnsPolicy to ClusterFirstWithHostNet so that fluent bit DaemonSet could call Kubelet locally.
 hostNetwork: true
 dnsPolicy: ClusterFirstWithHostNet
@@ -39,6 +40,7 @@ config:
         storage.checksum          off
         storage.backlog.mem_limit 5M
         
+
       @INCLUDE application-log.conf
   extraFiles:
     application-log.conf: |
@@ -111,6 +113,54 @@ config:
             Time_Key            time
             Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
   
+
+    @INCLUDE application-log.conf
+  
+  application-log.conf: |
+    [INPUT]
+        Name                tail
+        Tag                 application.*
+        Exclude_Path        /var/log/containers/cloudwatch-agent*, /var/log/containers/fluent-bit*, /var/log/containers/aws-node*, /var/log/containers/kube-proxy*
+        Path                /var/log/containers/*.log
+        Docker_Mode         On
+        Docker_Mode_Flush   5
+        Docker_Mode_Parser  container_firstline
+        Parser              docker
+        DB                  /var/fluent-bit/state/flb_container.db
+        Mem_Buf_Limit       50MB
+        Skip_Long_Lines     On
+        Refresh_Interval    10
+        Rotate_Wait         30
+        storage.type        filesystem
+        Read_from_Head      true
+       
+     [FILTER]
+        Name                kubernetes
+        Match               application.*
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_Tag_Prefix     application.var.log.containers.
+        Merge_Log           On
+        Merge_Log_Key       log_processed
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude Off
+        Labels              Off
+        Annotations         Off
+        Use_Kubelet         On
+        Kubelet_Port        10250
+        Buffer_Size         0
+
+    # Include logs for configured namespace
+    [FILTER]
+        Name                grep
+        Match               application.*
+        Regex               $kubernetes['namespace_name'] ${namespaces}
+
+     [FILTER]
+        Name                lua
+        Match               application.*
+        call                set_topic
+        code                function set_topic(tag, timestamp, record) if record["kubernetes"]["namespace_name"] ~= nil then record["namespace"] = "logs_" .. record["kubernetes"]["namespace_name"] end return 2, timestamp, record end
+
   outputs: |
     [OUTPUT]
         Name                kafka
@@ -128,7 +178,30 @@ config:
         # for logs you'll probably want this ot be 0 or 1, not more
         rdkafka.request.required.acks         1
 
-    
-  
+  parsers.conf: |
+    [PARSER]
+        Name                docker
+        Format              json
+        Time_Key            time
+        Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
+    [PARSER]
+        Name                syslog
+        Format              regex
+        Regex               ^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
+        Time_Key            time
+        Time_Format         %b %d %H:%M:%S
+    [PARSER]
+        Name                container_firstline
+        Format              regex
+        Regex               (?<log>(?<="log":")\S(?!\.).*?)(?<!\\)".*(?<stream>(?<="stream":").*?)".*(?<time>\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}\.\w*).*(?=})
+        Time_Key            time
+        Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
+    [PARSER]
+        Name                cwagent_firstline
+        Format              regex
+        Regex               (?<log>(?<="log":")\d{4}[\/-]\d{1,2}[\/-]\d{1,2}[ T]\d{2}:\d{2}:\d{2}(?!\.).*?)(?<!\\)".*(?<stream>(?<="stream":").*?)".*(?<time>\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}\.\w*).*(?=})
+        Time_Key            time
+        Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
+
 
   

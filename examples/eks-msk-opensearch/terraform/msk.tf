@@ -181,15 +181,6 @@ resource "aws_mskconnect_connector" "kafka-connect-fluentbit" {
     }
   }
 
-  #  log_delivery {
-  #    worker_log_delivery {
-  #      s3 {
-  #        enabled = true
-  #        bucket  = ""
-  #        prefix  = "logs"
-  #      }
-  #    }
-  #  }
 
   service_execution_role_arn = aws_iam_role.msk-connector-role.arn
 
