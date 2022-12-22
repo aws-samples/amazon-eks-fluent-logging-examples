@@ -5,8 +5,8 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "saas-logging-terraform"
-    key = "terraform-2.0"
+    bucket = ""
+    key = "eks-msk-opensearch/terraform.tfstate"
     region = "us-west-1"
   }
 
@@ -30,11 +30,6 @@ terraform {
       source  = "hashicorp/helm"
       version = "~> 2.5.1"
     }
-
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = "~> 1.14"
-    }
   }
 }
 
@@ -56,19 +51,5 @@ provider "helm" {
       args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_id]
       command     = "aws"
     }
-  }
-}
-
-
-provider "kubectl" {
-  apply_retry_count      = 5
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  load_config_file       = false
-
-  exec {
-    api_version = "client.authentication.k8s.io/v1alpha1"
-    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_id]
-    command     = "aws"
   }
 }

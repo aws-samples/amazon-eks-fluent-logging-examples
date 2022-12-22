@@ -12,9 +12,10 @@ resource "helm_release" "fluent_bit_daemonset" {
 
   values = [
     templatefile("${path.module}/templates/fluent-bit.yaml", {
-      image_version        = "1.9.7",
+      image_version        = "1.9.10",
       service_account_name = kubernetes_service_account.logging.metadata.0.name,
-      kafka_brokers        = join(",", formatlist("%s:9092", split(",", module.kafka.hostname))),
+      kafka_brokers        = join(",", formatlist("%s", split(",", module.kafka.bootstrap_brokers))),
+
       namespaces           = join("|", [for namespace in var.namespaces : namespace.name if namespace.enable_logs_to_es])
     }),
   ]

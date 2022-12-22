@@ -4,7 +4,6 @@ module "kafka" {
 
   name                 = "kafka-${local.resource_name_prefix}"
   vpc_id               = module.vpc.vpc_id
-  zone_id              = var.zone_id
   subnet_ids           = module.vpc.private_subnets
   kafka_version        = var.kafka_version
   broker_per_zone      = 1
@@ -182,15 +181,6 @@ resource "aws_mskconnect_connector" "kafka-connect-fluentbit" {
     }
   }
 
-   log_delivery {
-     worker_log_delivery {
-       s3 {
-         enabled = true
-         bucket  = "api-gw-lambda-auth-pk"
-         prefix  = "logs"
-       }
-     }
-   }
 
   service_execution_role_arn = aws_iam_role.msk-connector-role.arn
 
