@@ -4,8 +4,8 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "saas-logging-terraform"
-    key = "terraform-2.0/terraform.tfstate"
+    bucket = ""
+    key = "terraform/terraform.tfstate"
     region = "us-west-1"
   }
 
