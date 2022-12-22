@@ -1,4 +1,4 @@
-resource "kubernetes_namespace" "aks_namespace" {
+resource "kubernetes_namespace" "eks_namespace" {
   for_each = { for i, v in var.namespaces : i => v }
   metadata {
     annotations = {

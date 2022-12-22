@@ -21,28 +21,28 @@ resource "helm_release" "fluent_bit_daemonset" {
   ]
 }
 
-resource "kubernetes_network_policy" "logging_network_policy" {
-  metadata {
-    name      = "logging-network-policy"
-    namespace = "logging"
-  }
+#resource "kubernetes_network_policy" "logging_network_policy" {
+#  metadata {
+#    name      = "logging-network-policy"
+#    namespace = "logging"
+#  }
 
-  spec {
-    policy_types = [
-      "Ingress",
-      "Egress"
-    ]
+#  spec {
+#    policy_types = [
+#      "Ingress",
+#      "Egress"
+#    ]
 
     # Applies to all pods in the logging namespace.
-    pod_selector {}
+ #   pod_selector {}
 
     # Block all Ingress with no rule.
 
     # Allow all Egress
-    egress {}
-  }
+  #  egress {}
+  #}
 
-  depends_on = [
-    module.kafka
-  ]
-}
+  #depends_on = [
+  #  module.kafka
+  #]
+#}

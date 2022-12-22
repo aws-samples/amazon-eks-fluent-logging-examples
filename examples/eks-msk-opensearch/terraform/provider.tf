@@ -1,12 +1,11 @@
 provider "aws" {
-  alias  = "this"
   region = var.region
 }
 
 terraform {
   backend "s3" {
-    bucket = ""
-    key = "eks-msk-opensearch/terraform.tfstate"
+    bucket = "saas-logging-terraform"
+    key = "terraform-2.0/terraform.tfstate"
     region = "us-west-1"
   }
 

@@ -41,7 +41,7 @@ config:
         storage.backlog.mem_limit 5M
         
 
-      @INCLUDE application-log.conf
+        @INCLUDE application-log.conf
   extraFiles:
     application-log.conf: |
         [INPUT]
@@ -114,7 +114,7 @@ config:
             Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
   
 
-    @INCLUDE application-log.conf
+         @INCLUDE application-log.conf
   
   application-log.conf: |
     [INPUT]
@@ -202,6 +202,3 @@ config:
         Regex               (?<log>(?<="log":")\d{4}[\/-]\d{1,2}[\/-]\d{1,2}[ T]\d{2}:\d{2}:\d{2}(?!\.).*?)(?<!\\)".*(?<stream>(?<="stream":").*?)".*(?<time>\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}\.\w*).*(?=})
         Time_Key            time
         Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
-
-
-  

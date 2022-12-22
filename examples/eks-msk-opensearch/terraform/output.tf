@@ -90,16 +90,6 @@ output "cluster_security_group_id" {
 
 
 ################################################################################
-# IRSA
-################################################################################
-
-output "irsa_lbc_role_arn" {
-  description = "The Amazon Resource Name (ARN) of the identity provider"
-  value       = module.load_balancer_controller_irsa_role.iam_role_arn
-}
-
-
-################################################################################
 # Kafka
 ################################################################################
 

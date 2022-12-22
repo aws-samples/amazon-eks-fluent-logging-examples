@@ -35,11 +35,11 @@ resource "aws_opensearch_domain" "opensearch" {
     warm_type    = var.warm_instance_enabled ? var.warm_instance_type : null
 
     zone_awareness_enabled = local.es_zone_awareness_enabled ? true : false
-
     dynamic "zone_awareness_config" {
       for_each = local.es_zone_awareness_enabled ? [length(data.aws_availability_zones.available.names)] : []
       content {
-        availability_zone_count = zone_awareness_config.value
+# fixing to 2 instead of 3 or more it expect max 3.
+	   availability_zone_count = 2
       }
     }
   }

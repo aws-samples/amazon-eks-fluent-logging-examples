@@ -1,14 +1,14 @@
 // aws specific configurations
 variable "region" {
   description = "AWS Region Name"
-  default     = "us-west-1"
+  default     = "us-east-1"
 }
 
 // Refer col A1 on
 // https://gist.github.com/colinvh/14e4b7fb6b66c29f79d3
 variable "region_short" {
   description = "AWS Region Name Short"
-  default     = "uwe1"
+  default     = "uea1"
 }
 
 variable "env" {
@@ -18,7 +18,7 @@ variable "env" {
 
 variable "org" {
   description = "Organization Name"
-  default     = "example"
+  default     = "saas"
 }
 
 variable "vpc_cidr" {
