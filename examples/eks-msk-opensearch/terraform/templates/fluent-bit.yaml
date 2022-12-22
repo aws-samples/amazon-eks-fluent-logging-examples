@@ -11,6 +11,15 @@ tolerations:
     operator: "Exists"
     effect: "NoExecute"
 
+# Set hostNetwork to true and dnsPolicy to ClusterFirstWithHostNet so that fluent bit DaemonSet could call Kubelet locally.
+hostNetwork: true
+dnsPolicy: ClusterFirstWithHostNet
+
+# Node access required when using Kubelet
+rbac:
+  create: true
+  nodeAccess: true
+
 # Pipeline configuration.
 config:
   # This is a config for the FluentBit application running the pipeline.
