@@ -28,3 +28,12 @@ msbuild.wrn
 # Visual Studio
 .vs/
 .vscode/
+
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+.terraform.*

@@ -34,9 +34,13 @@ module "kafka" {
 ################################################################################
 # MSK Connect
 ################################################################################
-
+resource "random_string" "random" {
+  length           = 5
+  special          = false
+  upper = false
+}
 resource "aws_s3_bucket" "connectors" {
-  bucket = "msk-connector-${local.resource_name_prefix}"
+  bucket = "msk-connector-${local.resource_name_prefix}-${random_string.random.result}"
   tags   = local.tags
 }
 
@@ -144,6 +148,7 @@ resource "aws_mskconnect_connector" "kafka-connect-fluentbit" {
     "type.name"                      = "kafka-connect"
     "tasks.max"                      = "1"
     "topics"                         = join(",", [for namespace in var.namespaces : "logs_${namespace.name}" if namespace.enable_logs_to_es])
+    # "topics.regex"                   = "^(logs-.+)$"
     "connection.url"                 = "https://${aws_opensearch_domain.opensearch.endpoint}"
     "connection.username"            = var.es_master_user_name
     "connection.password"            = var.es_master_user_password
