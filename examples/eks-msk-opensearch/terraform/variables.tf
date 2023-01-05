@@ -99,11 +99,15 @@ variable "namespaces" {
   }))
   default = [
     {
-      "name" : "logging",
-      "enable_logs_to_es" = false,
+      "name" : "payment",
+      "enable_logs_to_es" = true,
     },
     {
-      "name" : "example",
+      "name" : "order",
+      "enable_logs_to_es" = true,
+    },
+    {
+      "name" : "product",
       "enable_logs_to_es" = true,
     }
   ]
