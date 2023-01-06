@@ -109,6 +109,10 @@ variable "namespaces" {
     {
       "name" : "product",
       "enable_logs_to_es" = true,
+    },
+    {
+      "name" : "logging",
+      "enable_logs_to_es" = true,
     }
   ]
 }
