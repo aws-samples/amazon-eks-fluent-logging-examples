@@ -80,7 +80,7 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
     }
     ```
 
-4. Optionally, configure `variables.tf` file to add Kubernetes namespaces you need. You can also use `enable_logs_to_es` boolean attribute to enable or disable logging for each namespace.
+4. Optionally, configure `variables.tf` file to add Kubernetes namespaces you need. You can also use `enable_logs_to_es` boolean attribute to enable or disable logging for each namespace. For example we are creating 4 namespaces with logging enabled. "logging" namespace is being used to deploy fluent-bit.
 
     ```hcl
     variable "namespaces" {
