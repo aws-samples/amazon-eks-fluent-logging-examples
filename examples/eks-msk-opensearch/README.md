@@ -101,8 +101,11 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
         {
         "name" : "product",
         "enable_logs_to_es" = true,
+        },
+        {
+        "name" : "logging",
+        "enable_logs_to_es" = true,
         }
-        
     ]
     }
     ```
@@ -132,21 +135,26 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
     
     ```
 
-9. Create an nginx deployment in `example` namespace to generate sample logs.
+9. Create two sample nginx deployment in `product` and 'order' namespace to generate sample logs.
 
     ```bash
-    kubectl config set-context --current --namespace=example
+    kubectl config set-context --current --namespace=product
+    kubectl apply -f ../example-deployment.yaml
+    kubectl get svc nginx-service-loadbalancer
+ 
+    kubectl config set-context --current --namespace=order
     kubectl apply -f ../example-deployment.yaml
     kubectl get svc nginx-service-loadbalancer
     ```
 
-10. Take note of the load balancer url and open it in a browser then hit it a few times to generate sample logs.
+10. Take note of the load balancer urls from above and open them in two seperate browser windows then hit it few times to generate sample logs.
 
 11. Verify `logs_example` Kafka topic is created, and read message from the topic using the following commands.
 
     ```bash
     ./bin/kafka-topics.sh --bootstrap-server=<list of your brokers>  --list
-    ./bin/kafka-console-consumer.sh --bootstrap-server <list of your brokers> --topic logs_example
+    ./bin/kafka-console-consumer.sh --bootstrap-server <list of your brokers> --topic product
+    ./bin/kafka-console-consumer.sh --bootstrap-server <list of your brokers> --topic order
     ```
 
 12. Login to OpenSearch dashboard to visualize our logs.
