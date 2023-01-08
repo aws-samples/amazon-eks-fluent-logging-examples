@@ -76,7 +76,7 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
     backend "s3" {
         bucket = "yourbucket"
         key = "path/to/your/key"
-        region = "us-west-1"
+        region = "us-east-1"
     }
     ```
 
@@ -129,6 +129,7 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
 
     ```bash
     aws eks update-kubeconfig --region <aws-region> --name <clustername>
+    
     ```
 
 9. Create an nginx deployment in `example` namespace to generate sample logs.
