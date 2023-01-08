@@ -91,13 +91,18 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
     }))
     default = [
         {
-        "name" : "logging",
-        "enable_logs_to_es" = false,
+        "name" : "payment",
+        "enable_logs_to_es" = true,
         },
         {
-        "name" : "example",
+        "name" : "order",
+        "enable_logs_to_es" = true,
+        },
+        {
+        "name" : "product",
         "enable_logs_to_es" = true,
         }
+        
     ]
     }
     ```
@@ -120,10 +125,11 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
     terraform apply
     ```
 
-8. Update the kubeconfig file to interact with you eks cluster.
+8. Update the kubeconfig file to interact with your newly created eks cluster.The name of cluster is choosen from variables in variables.tf in pattern of eks-<org>-<env>-<regionshort>
 
     ```bash
-    aws eks update-kubeconfig --region us-east-1 --name eks-saas-dev-uea1
+    aws eks update-kubeconfig --region <aws-region> --name <clustername>
+    
     ```
 
 9. Create an nginx deployment in `example` namespace to generate sample logs.

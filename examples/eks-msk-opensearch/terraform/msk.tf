@@ -147,7 +147,6 @@ resource "aws_mskconnect_connector" "kafka-connect-fluentbit" {
     "name"                           = "kafka-connect-fluentbit-${local.resource_name_prefix}"
     "type.name"                      = "kafka-connect"
     "tasks.max"                      = "1"
-    "topics"                         = join(",", [for namespace in var.namespaces : "logs_${namespace.name}" if namespace.enable_logs_to_es])
     # "topics.regex"                   = "^(logs-.+)$"
     "connection.url"                 = "https://${aws_opensearch_domain.opensearch.endpoint}"
     "connection.username"            = var.es_master_user_name
