@@ -76,14 +76,20 @@ config:
             Name                grep
             Match               application.*
             Regex               $kubernetes['namespace_name'] ${namespaces}
-
+            
+        [FILTER] 
+            Name                nest 
+            Match               application.* 
+            Operation           lift 
+            Nested_under        kubernetes
+            Add_prefix          logs
   outputs: |
     [OUTPUT]
         Name                kafka
         Match               application.*
         Brokers             ${kafka_brokers}
-        topics              logs_kubernetes
-        topic_key           ${namespaces}
+        topics              kubernetes
+        topic_key           logs_namespaces_name
         dynamic_topic       On
         Timestamp_Key       @timestamp
         Retry_Limit         5
