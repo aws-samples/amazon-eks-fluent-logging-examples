@@ -5,7 +5,7 @@
 resource "aws_iam_policy" "logging" {
   name_prefix = "Logging_IRSA_Policy-"
   description = "Logging IRSA Policy"
-  policy      = file("${path.module}/iam_policies/logging.json")
+  policy      = templatefile("${path.module}/iam_policies/logging.json", { kafka_arn = module.kafka.cluster_arn})
   tags        = local.tags
 }
 
