@@ -164,6 +164,7 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
     
 **Note:**
 As an alternative to 'nest' filter in fluent-bit yaml, following lua script filter can also be used to set the custom topic name with logs_ prefix.
+    
     [FILTER]
         Name                lua
         Match               kube.*
