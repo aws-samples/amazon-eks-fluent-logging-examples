@@ -6,7 +6,7 @@
             "Action": [
                 "kafka:*"
             ],
-            "Resource": "*"
+            "Resource": {{module.kafka.cluster_arn}}
         }
     ]
 }
