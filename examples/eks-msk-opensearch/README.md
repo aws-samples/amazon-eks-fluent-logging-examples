@@ -162,7 +162,8 @@ All logs from a Kubernetes namespace will be store in a separate index with `log
     > **Note:** Because this solution creates an OpenSearch Service domain within a VPC, your computer must be able to connect to the VPC. This connection often takes the form of a VPN, transit gateway, managed network, or proxy server. You can't directly access your domains from outside the VPC. For more information, see [Using OpenSearch Dashboards with Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/dashboards.html)
     
     
-**Note ** As an alternative to 'nest' filter in fluent-bit yaml, following lua script filter can also be used to set the custom topic name with logs_ prefix.
+**Note **
+As an alternative to 'nest' filter in fluent-bit yaml, following lua script filter can also be used to set the custom topic name with logs_ prefix.
     [FILTER]
         Name                lua
         Match               kube.*
