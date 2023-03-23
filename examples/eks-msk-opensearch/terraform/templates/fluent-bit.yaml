@@ -27,10 +27,10 @@ config:
   # We additionally expose the HTTP service so that Terraform can ping it.
   service: |
       [SERVICE]
-        Flush                     30
+        Flush                     5
+        Grace                     30
         Log_Level                 info
         Daemon                    off
-        Parsers_File              parsers.conf
         HTTP_Server               On
         HTTP_Listen               0.0.0.0
         HTTP_Port                 2020
@@ -48,7 +48,6 @@ config:
             Exclude_Path        /var/log/containers/cloudwatch-agent*, /var/log/containers/fluent-bit*, /var/log/containers/aws-node*, /var/log/containers/kube-proxy*
             Path                /var/log/containers/*.log
             multiline.parser    docker, cri
-            Parser              docker
             DB                  /var/fluent-bit/state/flb_container.db
             Mem_Buf_Limit       50MB
             Skip_Long_Lines     On
@@ -78,44 +77,13 @@ config:
             Match               application.*
             Regex               $kubernetes['namespace_name'] ${namespaces}
 
-        [FILTER]
-            Name                lua
-            Match               application.*
-            call                set_topic
-            code                function set_topic(tag, timestamp, record) if record["kubernetes"]["namespace_name"] ~= nil then record["namespace"] = "logs_" .. record["kubernetes"]["namespace_name"] end return 2, timestamp, record end
-
-    parsers.conf: |
-        [PARSER]
-            Name                docker
-            Format              json
-            Time_Key            time
-            Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
-        [PARSER]
-            Name                syslog
-            Format              regex
-            Regex               ^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
-            Time_Key            time
-            Time_Format         %b %d %H:%M:%S
-        [PARSER]
-            Name                container_firstline
-            Format              regex
-            Regex               (?<log>(?<="log":")\S(?!\.).*?)(?<!\\)".*(?<stream>(?<="stream":").*?)".*(?<time>\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}\.\w*).*(?=})
-            Time_Key            time
-            Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
-        [PARSER]
-            Name                cwagent_firstline
-            Format              regex
-            Regex               (?<log>(?<="log":")\d{4}[\/-]\d{1,2}[\/-]\d{1,2}[ T]\d{2}:\d{2}:\d{2}(?!\.).*?)(?<!\\)".*(?<stream>(?<="stream":").*?)".*(?<time>\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}\.\w*).*(?=})
-            Time_Key            time
-            Time_Format         %Y-%m-%dT%H:%M:%S.%LZ
-  
   outputs: |
     [OUTPUT]
         Name                kafka
         Match               application.*
         Brokers             ${kafka_brokers}
         topics              logs_kubernetes
-        topic_key           namespace
+        topic_key           ${namespaces}
         dynamic_topic       On
         Timestamp_Key       @timestamp
         Retry_Limit         5
