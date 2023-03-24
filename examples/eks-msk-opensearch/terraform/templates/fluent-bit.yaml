@@ -82,14 +82,14 @@ config:
             Match               application.* 
             Operation           lift 
             Nested_under        kubernetes
-            Add_prefix          logs
+            Add_prefix          logs_
   outputs: |
     [OUTPUT]
         Name                kafka
         Match               application.*
         Brokers             ${kafka_brokers}
         topics              kubernetes
-        topic_key           logs_namespaces_name
+        topic_key           logs_namespace_name
         dynamic_topic       On
         Timestamp_Key       @timestamp
         Retry_Limit         5
