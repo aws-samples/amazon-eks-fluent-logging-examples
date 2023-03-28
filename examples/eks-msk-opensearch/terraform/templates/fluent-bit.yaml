@@ -1,0 +1,106 @@
+# Template out the image version and service account name to use so that they can be modified from Terraform.
+image:
+  tag: ${image_version}
+
+serviceAccount:
+  name: ${service_account_name}
+
+# Tolerate all taints so that all nodes are logged.
+tolerations:
+  - key: ""
+    operator: "Exists"
+    effect: "NoExecute"
+
+# Set hostNetwork to true and dnsPolicy to ClusterFirstWithHostNet so that fluent bit DaemonSet could call Kubelet locally.
+hostNetwork: true
+dnsPolicy: ClusterFirstWithHostNet
+
+# Node access required when using Kubelet
+rbac:
+  create: true
+  nodeAccess: true
+
+# Pipeline configuration.
+config:
+  # This is a config for the FluentBit application running the pipeline.
+  # We set the flush interval, log level and where our parsers are stored.
+  # We additionally expose the HTTP service so that Terraform can ping it.
+  service: |
+      [SERVICE]
+        Flush                     5
+        Grace                     30
+        Log_Level                 info
+        Daemon                    off
+        HTTP_Server               On
+        HTTP_Listen               0.0.0.0
+        HTTP_Port                 2020
+        storage.path              /var/fluent-bit/state/flb-storage/
+        storage.sync              normal
+        storage.checksum          off
+        storage.backlog.mem_limit 5M
+        
+      @INCLUDE application-log.conf
+  extraFiles:
+    application-log.conf: |
+        [INPUT]
+            Name                tail
+            Tag                 application.*
+            Exclude_Path        /var/log/containers/cloudwatch-agent*, /var/log/containers/fluent-bit*, /var/log/containers/aws-node*, /var/log/containers/kube-proxy*
+            Path                /var/log/containers/*.log
+            multiline.parser    docker, cri
+            DB                  /var/fluent-bit/state/flb_container.db
+            Mem_Buf_Limit       50MB
+            Skip_Long_Lines     On
+            Refresh_Interval    10
+            Rotate_Wait         30
+            storage.type        filesystem
+            Read_from_Head      true
+
+        [FILTER]
+            Name                kubernetes
+            Match               application.*
+            Kube_URL            https://kubernetes.default.svc:443
+            Kube_Tag_Prefix     application.var.log.containers.
+            Merge_Log           On
+            Merge_Log_Key       log_processed
+            K8S-Logging.Parser  On
+            K8S-Logging.Exclude Off
+            Labels              Off
+            Annotations         Off
+            Use_Kubelet         On
+            Kubelet_Port        10250
+            Buffer_Size         0
+
+        # Include logs for configured namespace
+        [FILTER]
+            Name                grep
+            Match               application.*
+            Regex               $kubernetes['namespace_name'] ${namespaces}
+            
+        [FILTER] 
+            Name                nest 
+            Match               application.* 
+            Operation           lift 
+            Nested_under        kubernetes
+            Add_prefix          logs_
+  outputs: |
+    [OUTPUT]
+        Name                kafka
+        Match               application.*
+        Brokers             ${kafka_brokers}
+        topics              kubernetes
+        topic_key           logs_namespace_name
+        dynamic_topic       On
+        Timestamp_Key       @timestamp
+        Retry_Limit         5
+        # hides errors "Receive failed: Disconnected" when kafka kills idle connections
+        rdkafka.log.connection.close          false
+        # producer buffer is not included in http://fluentbit.io/documentation/0.12/configuration/memory_usage.html#estimating
+        rdkafka.queue.buffering.max.kbytes    10240
+        # for logs you'll probably want this ot be 0 or 1, not more
+        rdkafka.request.required.acks         1
+
+    
+  
+
+  
