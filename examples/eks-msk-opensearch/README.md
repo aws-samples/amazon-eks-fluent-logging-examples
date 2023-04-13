@@ -2,6 +2,8 @@
 
 In this example, we will showcase how to build a centralized logging solution for multi-tenant environments where applications that belong to different teams or customers run in a shared Amazon EKS cluster.
 
+For Estimated running cost of the aws infrastructure follow  [Cost](../Cost.md)
+
 ## Components
 
 Fluent Bit DaemonSet to collect, modify, and enrich logs from applications, and publish the logs to Amazon Managed Streaming for Kafka (Amazon MSK).
