@@ -2,7 +2,6 @@
 
 In this example, we will showcase how to build a centralized logging solution for multi-tenant environments where applications that belong to different teams or customers run in a shared Amazon EKS cluster.
 
-
 ## Components
 
 Fluent Bit DaemonSet to collect, modify, and enrich logs from applications, and publish the logs to Amazon Managed Streaming for Kafka (Amazon MSK).
@@ -30,6 +29,7 @@ In the following diagram Product, Order, and Payment are example of tenants whic
 ![Architecture](Ref-Architecture.png?raw=true "Title")
 
 ### Fluent Bit configuration
+
 
 We used the 'nest' filter plugin to move namespace_name key to the top from inputs logs enriched by kubernetes filter. Nest filter also prefixes `logs_` to the namespaces key. This new key is subsequently then used in the Kafka output plugin to define Kafka topic name dynamically. Therefore, all logs belong to a Kubernetes namespace will be grouped by a Kafka topic.
 
