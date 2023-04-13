@@ -2,7 +2,6 @@
 
 In this example, we will showcase how to build a centralized logging solution for multi-tenant environments where applications that belong to different teams or customers run in a shared Amazon EKS cluster.
 
-For Estimated running cost of the solution and base aws infrastructure follow  [Cost](./Cost.md)
 
 ## Components
 
@@ -32,7 +31,7 @@ In the following diagram Product, Order, and Payment are example of tenants whic
 
 ### Fluent Bit configuration
 
-We used the Lua filter plugin to add a key `namespace` with value of Kubernetes namespace name prefixed by `logs_`. This key is subsequently used in the Kafka output plugin to define Kafka topic name dynamically. Therefore, all logs belong to a Kubernetes namespace will be grouped by a Kafka topic.
+We used the 'nest' filter plugin to move namespace_name value to top and prefixed by `logs_`. This key is subsequently used in the Kafka output plugin to define Kafka topic name dynamically. Therefore, all logs belong to a Kubernetes namespace will be grouped by a Kafka topic.
 
 If you need a custom parser for your application logs, Fluent Bit allows you to suggest a pre-defined parser by annotating your application Pod definition using `fluentbit.io/parser: <parser-name>`. You can also completely opt out of logging for any of your Pods using `fluentbit.io/exclude: "true"` annotation. For more information, see [Fluent Bit - Kubernetes Annotations](https://docs.fluentbit.io/manual/pipeline/filters/kubernetes#kubernetes-annotations).
 
