@@ -6,7 +6,8 @@
 			"logs:CreateLogStream",
 			"logs:CreateLogGroup",
 			"logs:DescribeLogStreams",
-			"logs:PutLogEvents"
+			"logs:PutLogEvents",
+                        "logs:PutRetentionPolicy"
 		],
 		"Resource": "*"
 	}]
