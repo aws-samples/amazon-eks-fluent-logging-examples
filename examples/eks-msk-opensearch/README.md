@@ -30,7 +30,8 @@ In the following diagram Product, Order, and Payment are example of tenants whic
 
 ### Fluent Bit configuration
 
-We used the Lua filter plugin to add a key `namespace` with value of Kubernetes namespace name prefixed by `logs_`. This key is subsequently used in the Kafka output plugin to define Kafka topic name dynamically. Therefore, all logs belong to a Kubernetes namespace will be grouped by a Kafka topic.
+
+We used the 'nest' filter plugin to move namespace_name key to the top from inputs logs enriched by kubernetes filter. Nest filter also prefixes `logs_` to the namespace key. This new key is subsequently used in the Kafka output plugin to define Kafka topic name dynamically. Therefore, all logs belong to a Kubernetes namespace will be grouped by a Kafka topic.
 
 If you need a custom parser for your application logs, Fluent Bit allows you to suggest a pre-defined parser by annotating your application Pod definition using `fluentbit.io/parser: <parser-name>`. You can also completely opt out of logging for any of your Pods using `fluentbit.io/exclude: "true"` annotation. For more information, see [Fluent Bit - Kubernetes Annotations](https://docs.fluentbit.io/manual/pipeline/filters/kubernetes#kubernetes-annotations).
 
